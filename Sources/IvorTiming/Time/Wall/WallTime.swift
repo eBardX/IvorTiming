@@ -67,6 +67,7 @@ extension WallTime: TimeProtocol {
 
     // MARK: Public Type Aliases
 
+    /// The duration type for a wall time.
     public typealias DurationType = WallDuration
 
     // MARK: Public Instance Methods

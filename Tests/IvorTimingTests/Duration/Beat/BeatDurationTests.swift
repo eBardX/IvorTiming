@@ -1,5 +1,6 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -14,6 +15,24 @@ extension BeatDurationTests {
     func adding() {
         #expect(BeatDuration(1).adding(BeatDuration(2)) == BeatDuration(3))
         #expect(BeatDuration.zero.adding(.zero) == .zero)
+    }
+
+    @Test
+    func addingInPlace() {
+        var dur = BeatDuration(1)
+
+        dur += BeatDuration(2)
+
+        #expect(dur == BeatDuration(3))
+    }
+
+    @Test
+    func codable() throws {
+        let original = BeatDuration(3)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(BeatDuration.self, from: data)
+
+        #expect(decoded == original)
     }
 
     @Test
@@ -77,6 +96,15 @@ extension BeatDurationTests {
     func subtracting() {
         #expect(BeatDuration(3).subtracting(BeatDuration(1)) == BeatDuration(2))
         #expect(BeatDuration(1).subtracting(BeatDuration(3)) == nil)
+    }
+
+    @Test
+    func subtractingInPlace() {
+        var dur = BeatDuration(3)
+
+        dur -= BeatDuration(1)
+
+        #expect(dur == BeatDuration(2))
     }
 
     @Test

@@ -68,6 +68,7 @@ extension BeatTime: TimeProtocol {
 
     // MARK: Public Type Aliases
 
+    /// The duration type for a beat time.
     public typealias DurationType = BeatDuration
 
     // MARK: Public Instance Methods

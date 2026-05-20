@@ -3,14 +3,12 @@
 public import XestiTools
 
 extension BeatQuantizer {
-
-    /// An error thrown by ``BeatQuantizer`` operations.
+    /// An error that can occur while performing a beat quantizer operation.
     public enum Error {
-
-        /// An empty subdivision factor array.
+        /// The subdivision factor array is empty.
         case emptyFactors
 
-        /// A subdivision factor that is not a positive integer.
+        /// A subdivision factor is invalid.
         case invalidFactor(Int)
     }
 }
@@ -19,19 +17,19 @@ extension BeatQuantizer {
 
 extension BeatQuantizer.Error: EnhancedError {
 
-    /// The error category for this error.
+    /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")
     }
 
-    /// The human-readable message for this error.
+    /// A human-readable description of this error.
     public var message: String {
         switch self {
         case .emptyFactors:
-            "Quantization factors must not be empty"
+            "The subdivision factors must not be empty"
 
         case let .invalidFactor(factor):
-            "Invalid quantization factor: \(factor)"
+            "Invalid subdivision factor: \(factor)"
         }
     }
 }

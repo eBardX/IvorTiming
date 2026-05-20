@@ -9,6 +9,7 @@ public protocol TimeProtocol<DurationType>: Codable,
                                             Hashable,
                                             InterpolatableKey,
                                             Sendable {
+    /// The type of duration used to measure the distance between two time values.
     associatedtype DurationType: DurationProtocol
 
     /// The zero time value.

@@ -17,11 +17,11 @@ extension BeatQuantizerErrorTests {
 
     @Test
     func message_emptyFactors() {
-        #expect(BeatQuantizer.Error.emptyFactors.message == "Quantization factors must not be empty")
+        #expect(BeatQuantizer.Error.emptyFactors.message == "The subdivision factors must not be empty")
     }
 
     @Test
     func message_invalidFactor() {
-        #expect(BeatQuantizer.Error.invalidFactor(-3).message == "Invalid quantization factor: -3")
+        #expect(BeatQuantizer.Error.invalidFactor(-3).message == "Invalid subdivision factor: -3")
     }
 }

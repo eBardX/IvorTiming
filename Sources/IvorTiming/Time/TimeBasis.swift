@@ -21,11 +21,10 @@ extension TimeBasis {
     ///
     /// - Parameter stringValue:    The string representation to parse.
     ///
-    /// - Returns:  The matching ``TimeBasis``, or `nil` if the string is not
-    ///             recognized.
-    public init?(stringValue: String) {
+    /// - Throws:   `ParseError` if `stringValue` is not a recognized time basis.
+    public init(stringValue: String) throws {
         guard let timeBasis = Self.timeBases[stringValue]
-        else { return nil }
+        else { throw ParseError.invalidTimeBasis(stringValue) }
 
         self = timeBasis
     }
@@ -55,11 +54,12 @@ extension TimeBasis: Codable {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self)
 
-        guard let timeBasis = Self.timeBases[stringValue]
-        else { throw DecodingError.dataCorruptedError(in: container,
-                                                      debugDescription: "Invalid time basis value") }
-
-        self = timeBasis
+        do {
+            try self.init(stringValue: stringValue)
+        } catch {
+            throw DecodingError.dataCorruptedError(in: container,
+                                                   debugDescription: "Invalid time basis value")
+        }
     }
 
     // MARK: Public Instance Methods

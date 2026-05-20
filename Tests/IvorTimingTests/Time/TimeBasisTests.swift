@@ -27,13 +27,13 @@ extension TimeBasisTests {
 
     @Test
     func init_invalid() {
-        #expect(TimeBasis(stringValue: "invalid") == nil)
-        #expect(TimeBasis(stringValue: "") == nil)
+        #expect(throws: ParseError.self) { try TimeBasis(stringValue: "invalid") }
+        #expect(throws: ParseError.self) { try TimeBasis(stringValue: "") }
     }
 
     @Test
-    func init_valid() {
-        #expect(TimeBasis(stringValue: "beat") == .beat)
-        #expect(TimeBasis(stringValue: "wall") == .wall)
+    func init_valid() throws {
+        #expect(try TimeBasis(stringValue: "beat") == .beat)
+        #expect(try TimeBasis(stringValue: "wall") == .wall)
     }
 }

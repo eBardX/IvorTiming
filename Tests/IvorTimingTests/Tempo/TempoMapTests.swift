@@ -1,8 +1,10 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
+import XestiTools
 
 struct TempoMapTests {
 }
@@ -10,6 +12,18 @@ struct TempoMapTests {
 // MARK: -
 
 extension TempoMapTests {
+    @Test
+    func codable() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let original = TempoMap().inserting(beatTime: BeatTime(1),
+                                            tempo: t120)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(TempoMap.self, from: data)
+
+        #expect(decoded[BeatTime(1)] == t120)
+        #expect(decoded.defaultTempo == original.defaultTempo)
+    }
+
     @Test
     func defaultTempo() {
         let tmap = TempoMap()
@@ -23,6 +37,40 @@ extension TempoMapTests {
         let tmap = TempoMap(defaultTempo: t90)
 
         #expect(tmap.defaultTempo == t90)
+    }
+
+    @Test
+    func forEach() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        let tmap = TempoMap()
+            .inserting(beatTime: BeatTime(1), tempo: t120)
+            .inserting(beatTime: BeatTime(2), tempo: t90)
+        var visited: [(BeatTime, Tempo)] = []
+
+        tmap.forEach { beatTime, tempo, _ in
+            visited.append((beatTime, tempo))
+        }
+
+        #expect(visited.count == 2)
+        #expect(visited[0].0 == BeatTime(1))
+        #expect(visited[0].1 == t120)
+        #expect(visited[1].0 == BeatTime(2))
+        #expect(visited[1].1 == t90)
+    }
+
+    @Test
+    func hasExtras() throws {
+        let t120   = try #require(Tempo(uintValue: 120))
+        let extras = Extras(elements: [Extra(name: "tag")])
+        let with   = TempoMap().inserting(beatTime: BeatTime(1),
+                                          tempo: t120,
+                                          extras: extras)
+        let without = TempoMap().inserting(beatTime: BeatTime(1),
+                                           tempo: t120)
+
+        #expect(with.hasExtras)
+        #expect(!without.hasExtras)
     }
 
     @Test

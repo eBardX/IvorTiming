@@ -1,5 +1,6 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -14,6 +15,24 @@ extension WallDurationTests {
     func adding() {
         #expect(WallDuration(1).adding(WallDuration(2)) == WallDuration(3))
         #expect(WallDuration.zero.adding(.zero) == .zero)
+    }
+
+    @Test
+    func addingInPlace() {
+        var dur = WallDuration(1)
+
+        dur += WallDuration(2)
+
+        #expect(dur == WallDuration(3))
+    }
+
+    @Test
+    func codable() throws {
+        let original = WallDuration(3)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(WallDuration.self, from: data)
+
+        #expect(decoded == original)
     }
 
     @Test
@@ -76,6 +95,15 @@ extension WallDurationTests {
     func subtracting() {
         #expect(WallDuration(3).subtracting(WallDuration(1)) == WallDuration(2))
         #expect(WallDuration(1).subtracting(WallDuration(3)) == nil)
+    }
+
+    @Test
+    func subtractingInPlace() {
+        var dur = WallDuration(3)
+
+        dur -= WallDuration(1)
+
+        #expect(dur == WallDuration(2))
     }
 
     @Test

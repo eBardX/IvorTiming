@@ -1,3 +1,5 @@
+// © 2025–2026 John Gary Pusey (see LICENSE.md)
+
 import Foundation
 @testable import IvorTiming
 import Testing

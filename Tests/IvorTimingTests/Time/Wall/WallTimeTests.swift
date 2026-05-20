@@ -1,3 +1,5 @@
+// © 2025–2026 John Gary Pusey (see LICENSE.md)
+
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -51,13 +53,13 @@ extension WallTimeTests {
 
     @Test
     func moved_backward() {
-        #expect(WallTime(3).moved(by: WallDuration(2), direction: .backward) == WallTime(1))
-        #expect(WallTime(0).moved(by: WallDuration(1), direction: .backward) == nil)
+        #expect(WallTime(3).moved(by: DirectedDuration(duration: WallDuration(2), direction: .backward)) == WallTime(1))
+        #expect(WallTime(0).moved(by: DirectedDuration(duration: WallDuration(1), direction: .backward)) == nil)
     }
 
     @Test
     func moved_forward() {
-        #expect(WallTime(1).moved(by: WallDuration(2), direction: .forward) == WallTime(3))
+        #expect(WallTime(1).moved(by: DirectedDuration(duration: WallDuration(2), direction: .forward)) == WallTime(3))
     }
 
     @Test

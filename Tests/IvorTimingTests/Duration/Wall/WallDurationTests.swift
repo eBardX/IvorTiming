@@ -1,3 +1,5 @@
+// © 2025–2026 John Gary Pusey (see LICENSE.md)
+
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -58,6 +60,16 @@ extension WallDurationTests {
     func operators() {
         #expect(WallDuration(1) + WallDuration(2) == WallDuration(3))
         #expect(WallDuration(3) - WallDuration(1) == WallDuration(2))
+        #expect(WallDuration(2) * Number(3) == WallDuration(6))
+    }
+
+    @Test
+    func scalingInPlace() {
+        var dur = WallDuration(2)
+
+        dur *= Number(3)
+
+        #expect(dur == WallDuration(6))
     }
 
     @Test

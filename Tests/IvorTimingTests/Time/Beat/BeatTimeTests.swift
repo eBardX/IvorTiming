@@ -1,3 +1,5 @@
+// © 2025–2026 John Gary Pusey (see LICENSE.md)
+
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -58,19 +60,18 @@ extension BeatTimeTests {
 
     @Test
     func moved_backward() {
-        #expect(BeatTime(3).moved(by: BeatDuration(2), direction: .backward) == BeatTime(1))
-        #expect(BeatTime(0).moved(by: BeatDuration(1), direction: .backward) == nil)
+        #expect(BeatTime(3).moved(by: DirectedDuration(duration: BeatDuration(2), direction: .backward)) == BeatTime(1))
+        #expect(BeatTime(0).moved(by: DirectedDuration(duration: BeatDuration(1), direction: .backward)) == nil)
     }
 
     @Test
     func moved_forward() {
-        #expect(BeatTime(1).moved(by: BeatDuration(2), direction: .forward) == BeatTime(3))
+        #expect(BeatTime(1).moved(by: DirectedDuration(duration: BeatDuration(2), direction: .forward)) == BeatTime(3))
     }
 
     @Test
     func moved_same() {
-        #expect(BeatTime(1).moved(by: .zero, direction: .same) == BeatTime(1))
-        #expect(BeatTime(1).moved(by: BeatDuration(1), direction: .same) == nil)
+        #expect(BeatTime(1).moved(by: DirectedDuration(duration: BeatDuration.zero, direction: .same)) == BeatTime(1))
     }
 
     @Test

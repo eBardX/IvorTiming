@@ -24,9 +24,11 @@ public struct Tempo: UIntRepresentable {
 
     // MARK: Public Initializers
 
-    /// Creates a tempo from an unsigned integer value, returning `nil` if the value is zero.
+    /// Creates a ``Tempo`` from an unsigned integer value.
     ///
-    /// - Parameter uintValue:  A positive beats-per-minute value.
+    /// - Parameter uintValue:  The beats-per-minute value.
+    ///
+    /// - Returns:  A new ``Tempo``, or `nil` if `uintValue` is zero.
     public init?(uintValue: UInt) {
         guard Self.isValid(uintValue)
         else { return nil }

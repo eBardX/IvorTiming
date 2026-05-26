@@ -50,7 +50,7 @@ extension BeatDuration: DurationProtocol {
 
     // MARK: Public Instance Properties
 
-    /// Returns a Boolean value indicating whether this duration is zero.
+    /// A Boolean value indicating whether this duration is zero.
     public var isZero: Bool {
         self == .zero
     }

@@ -55,8 +55,6 @@ extension Tempo.FormatStyle: FormatStyle {
 
 extension Tempo {
     /// Returns an attributed string representation of this tempo using the default format style.
-    ///
-    /// - Returns:  An `AttributedString` representation of the tempo.
     public func formatted() -> AttributedString {
         FormatStyle().format(self)
     }

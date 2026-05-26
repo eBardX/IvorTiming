@@ -16,7 +16,7 @@ extension WallDuration {
 
         /// Creates a format style with the given locale.
         ///
-        /// - Parameter locale: The locale to use for formatting. Defaults to
+        /// - Parameter locale:  The locale to use for formatting. Defaults to
         ///                      `.autoupdatingCurrent`.
         public init(locale: Locale = .autoupdatingCurrent) {
             self.baseStyle = Number.FormatStyle(locale: locale)

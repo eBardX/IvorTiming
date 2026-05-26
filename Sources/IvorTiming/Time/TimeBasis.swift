@@ -79,7 +79,7 @@ extension TimeBasis: Codable {
 // MARK: - CustomStringConvertible
 
  extension TimeBasis: CustomStringConvertible {
-    /// Returns the string representation of this time basis.
+    /// The string representation of this time basis.
     public var description: String {
         Self.stringValues[self].require()
     }

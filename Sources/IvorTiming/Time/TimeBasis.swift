@@ -85,6 +85,11 @@ extension TimeBasis: Codable {
     }
  }
 
+// MARK: - Equatable
+
+extension TimeBasis: Equatable {
+}
+
 // MARK: - Sendable
 
 extension TimeBasis: Sendable {

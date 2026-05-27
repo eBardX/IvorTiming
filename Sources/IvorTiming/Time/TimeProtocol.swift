@@ -6,6 +6,7 @@ public import XestiTools
 /// A protocol for types that represent a point in time.
 public protocol TimeProtocol<DurationType>: Codable,
                                             Comparable,
+                                            Equatable,
                                             Hashable,
                                             InterpolatableKey,
                                             Sendable {

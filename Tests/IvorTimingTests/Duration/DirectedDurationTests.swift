@@ -17,8 +17,25 @@ extension DirectedDurationTests {
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(DirectedDuration<BeatDuration>.self, from: data)
 
-        #expect(decoded.direction == original.direction)
-        #expect(decoded.duration == original.duration)
+        #expect(decoded == original)
+    }
+
+    @Test
+    func equality() {
+        let d1 = DirectedDuration(duration: BeatDuration(2), direction: .forward)
+        let d2 = DirectedDuration(duration: BeatDuration(2), direction: .forward)
+
+        #expect(d1 == d2)
+    }
+
+    @Test
+    func inequality() {
+        let d1 = DirectedDuration(duration: BeatDuration(1), direction: .forward)
+        let d2 = DirectedDuration(duration: BeatDuration(2), direction: .forward)
+        let d3 = DirectedDuration(duration: BeatDuration(1), direction: .backward)
+
+        #expect(d1 != d2)
+        #expect(d1 != d3)
     }
 
     @Test

@@ -247,6 +247,11 @@ extension TempoMap: Codable {
     }
 }
 
+// MARK: - Equatable
+
+extension TempoMap: Equatable {
+}
+
 // MARK: - Sendable
 
 extension TempoMap: Sendable {

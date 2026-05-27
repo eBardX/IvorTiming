@@ -26,6 +26,13 @@ extension TimeBasisTests {
     }
 
     @Test
+    func equality() {
+        #expect(TimeBasis.beat == .beat)
+        #expect(TimeBasis.wall == .wall)
+        #expect(TimeBasis.beat != .wall)
+    }
+
+    @Test
     func init_invalid() {
         #expect(throws: ParseError.self) { try TimeBasis(stringValue: "invalid") }
         #expect(throws: ParseError.self) { try TimeBasis(stringValue: "") }

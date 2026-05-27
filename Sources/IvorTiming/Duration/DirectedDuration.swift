@@ -39,6 +39,11 @@ public struct DirectedDuration<DurationType: DurationProtocol> {
 extension DirectedDuration: Codable {
 }
 
+// MARK: - Equatable
+
+extension DirectedDuration: Equatable {
+}
+
 // MARK: - Sendable
 
 extension DirectedDuration: Sendable {

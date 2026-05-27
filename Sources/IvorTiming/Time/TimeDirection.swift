@@ -17,6 +17,11 @@ public enum TimeDirection {
 extension TimeDirection: Codable {
 }
 
+// MARK: - Equatable
+
+extension TimeDirection: Equatable {
+}
+
 // MARK: - Sendable
 
 extension TimeDirection: Sendable {

@@ -6,6 +6,7 @@ public import XestiNumbers
 /// A protocol for types that represent a non-negative duration of time.
 public protocol DurationProtocol: Codable,
                                   Comparable,
+                                  Equatable,
                                   Hashable,
                                   Sendable {
     /// A Boolean value indicating whether this duration is zero.

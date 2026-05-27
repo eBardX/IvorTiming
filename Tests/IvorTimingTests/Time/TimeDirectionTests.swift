@@ -19,4 +19,18 @@ extension TimeDirectionTests {
             #expect(decoded == direction)
         }
     }
+
+    @Test
+    func equality() {
+        #expect(TimeDirection.backward == .backward)
+        #expect(TimeDirection.same == .same)
+        #expect(TimeDirection.forward == .forward)
+    }
+
+    @Test
+    func inequality() {
+        #expect(TimeDirection.backward != .same)
+        #expect(TimeDirection.backward != .forward)
+        #expect(TimeDirection.same != .forward)
+    }
 }

@@ -101,6 +101,11 @@ extension TempoMap.Entry: Comparable {
     }
 }
 
+// MARK: - Equatable
+
+extension TempoMap.Entry: Equatable {
+}
+
 // MARK: - Sendable
 
 extension TempoMap.Entry: Sendable {

@@ -40,6 +40,21 @@ extension TempoMapTests {
     }
 
     @Test
+    func equality() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        let tmap1 = TempoMap().inserting(beatTime: BeatTime(1), tempo: t120)
+        let tmap2 = TempoMap().inserting(beatTime: BeatTime(1), tempo: t120)
+        let tmap3 = TempoMap().inserting(beatTime: BeatTime(1), tempo: t90)
+        let tmap4 = TempoMap(defaultTempo: t90).inserting(beatTime: BeatTime(1),
+                                                          tempo: t120)
+
+        #expect(tmap1 == tmap2)
+        #expect(tmap1 != tmap3)
+        #expect(tmap1 != tmap4)
+    }
+
+    @Test
     func forEach() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90  = try #require(Tempo(uintValue: 90))

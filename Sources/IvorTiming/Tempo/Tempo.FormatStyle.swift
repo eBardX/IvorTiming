@@ -45,7 +45,7 @@ extension Tempo.FormatStyle: FormatStyle {
     ///
     /// - Parameter value:  The ``Tempo`` value to format.
     ///
-    /// - Returns:  An `AttributedString` representation of the tempo’s numeric value.
+    /// - Returns:  An attributed string representation of `value`.
     public func format(_ value: Tempo) -> AttributedString {
         baseStyle.format(value.numberValue)
     }

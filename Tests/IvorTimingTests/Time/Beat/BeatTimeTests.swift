@@ -1,5 +1,6 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -17,6 +18,15 @@ extension BeatTimeTests {
         time += BeatDuration(2)
 
         #expect(time == BeatTime(3))
+    }
+
+    @Test
+    func codable() throws {
+        let original = BeatTime(3)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(BeatTime.self, from: data)
+
+        #expect(decoded == original)
     }
 
     @Test
@@ -50,6 +60,16 @@ extension BeatTimeTests {
     }
 
     @Test
+    func fraction() {
+        let start = BeatTime(0)
+        let end = BeatTime(4)
+
+        #expect(BeatTime(0).fraction(from: start, through: end) == 0.0)
+        #expect(BeatTime(2).fraction(from: start, through: end) == 0.5)
+        #expect(BeatTime(4).fraction(from: start, through: end) == 1.0)
+    }
+
+    @Test
     func hashable() {
         let set: Set<BeatTime> = [BeatTime(1), BeatTime(1), BeatTime(2)]
 
@@ -65,6 +85,13 @@ extension BeatTimeTests {
     func init_valid() {
         #expect(BeatTime(numberValue: 0) != nil)
         #expect(BeatTime(numberValue: 1) != nil)
+    }
+
+    @Test
+    func isValid() {
+        #expect(BeatTime.isValid(Number(0)))
+        #expect(BeatTime.isValid(Number(1)))
+        #expect(!BeatTime.isValid(Number(-1)))
     }
 
     @Test

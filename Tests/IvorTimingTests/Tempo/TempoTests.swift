@@ -64,6 +64,13 @@ extension TempoTests {
     }
 
     @Test
+    func isValid() {
+        #expect(!Tempo.isValid(0))
+        #expect(Tempo.isValid(1))
+        #expect(Tempo.isValid(60))
+    }
+
+    @Test
     func numberValue() throws {
         let t120 = try #require(Tempo(uintValue: 120))
 

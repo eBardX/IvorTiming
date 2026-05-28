@@ -65,6 +65,13 @@ extension WallDurationTests {
     }
 
     @Test
+    func isValid() {
+        #expect(WallDuration.isValid(Number(0)))
+        #expect(WallDuration.isValid(Number(1)))
+        #expect(!WallDuration.isValid(Number(-1)))
+    }
+
+    @Test
     func isZero() {
         #expect(WallDuration.zero.isZero)
         #expect(!WallDuration(1).isZero)

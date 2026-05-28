@@ -20,6 +20,12 @@ extension TimeBasisTests {
     }
 
     @Test
+    func comparable() {
+        #expect(TimeBasis.beat < TimeBasis.wall)
+        #expect(!(TimeBasis.wall < TimeBasis.beat))
+    }
+
+    @Test
     func description() {
         #expect(TimeBasis.beat.description == "beat")
         #expect(TimeBasis.wall.description == "wall")
@@ -30,6 +36,13 @@ extension TimeBasisTests {
         #expect(TimeBasis.beat == .beat)
         #expect(TimeBasis.wall == .wall)
         #expect(TimeBasis.beat != .wall)
+    }
+
+    @Test
+    func hashable() {
+        let set: Set<TimeBasis> = [.beat, .beat, .wall]
+
+        #expect(set.count == 2)
     }
 
     @Test

@@ -89,6 +89,19 @@ extension TempoMapTests {
     }
 
     @Test
+    func hasExtras_updatedOnRemove() throws {
+        let t120   = try #require(Tempo(uintValue: 120))
+        let extras = Extras(elements: [Extra(name: "tag")])
+        var tmap   = TempoMap().inserting(beatTime: BeatTime(1),
+                                          tempo: t120,
+                                          extras: extras)
+
+        tmap.remove(beatTime: BeatTime(1), tempo: t120, extras: extras)
+
+        #expect(!tmap.hasExtras)
+    }
+
+    @Test
     func inserting() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let tmap = TempoMap().inserting(beatTime: BeatTime(1),
@@ -111,6 +124,18 @@ extension TempoMapTests {
     }
 
     @Test
+    func merge() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        var tmap = TempoMap().inserting(beatTime: BeatTime(1), tempo: t120)
+
+        tmap.merge(with: TempoMap().inserting(beatTime: BeatTime(2), tempo: t90))
+
+        #expect(tmap[BeatTime(1)] == t120)
+        #expect(tmap[BeatTime(2)] == t90)
+    }
+
+    @Test
     func merging() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90  = try #require(Tempo(uintValue: 90))
@@ -122,6 +147,16 @@ extension TempoMapTests {
 
         #expect(merged[BeatTime(1)] == t120)
         #expect(merged[BeatTime(2)] == t90)
+    }
+
+    @Test
+    func remove() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap().inserting(beatTime: BeatTime(1), tempo: t120)
+
+        tmap.remove(beatTime: BeatTime(1), tempo: t120)
+
+        #expect(tmap.isEmpty)
     }
 
     @Test

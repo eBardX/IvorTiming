@@ -77,7 +77,8 @@ extension WallTime: TimeProtocol {
     /// - Parameter time:   The destination wall time.
     ///
     /// - Returns:  A ``DirectedDuration`` representing the distance and
-    ///             direction from this wall time to `time`.
+    ///             direction from this wall time to `time`, or `nil` if the
+    ///             result cannot be computed.
     public func duration(to time: Self) -> DirectedDuration<DurationType>? {
         let val1 = numberValue
         let val2 = time.numberValue

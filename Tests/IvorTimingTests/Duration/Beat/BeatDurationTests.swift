@@ -66,6 +66,13 @@ extension BeatDurationTests {
     }
 
     @Test
+    func isValid() {
+        #expect(BeatDuration.isValid(Number(0)))
+        #expect(BeatDuration.isValid(Number(1)))
+        #expect(!BeatDuration.isValid(Number(-1)))
+    }
+
+    @Test
     func isZero() {
         #expect(BeatDuration.zero.isZero)
         #expect(!BeatDuration(1).isZero)

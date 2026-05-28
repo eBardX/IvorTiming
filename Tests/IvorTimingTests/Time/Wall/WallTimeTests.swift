@@ -1,5 +1,6 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
@@ -17,6 +18,15 @@ extension WallTimeTests {
         time += WallDuration(2)
 
         #expect(time == WallTime(3))
+    }
+
+    @Test
+    func codable() throws {
+        let original = WallTime(3)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(WallTime.self, from: data)
+
+        #expect(decoded == original)
     }
 
     @Test
@@ -50,6 +60,16 @@ extension WallTimeTests {
     }
 
     @Test
+    func fraction() {
+        let start = WallTime(0)
+        let end = WallTime(4)
+
+        #expect(WallTime(0).fraction(from: start, through: end) == 0.0)
+        #expect(WallTime(2).fraction(from: start, through: end) == 0.5)
+        #expect(WallTime(4).fraction(from: start, through: end) == 1.0)
+    }
+
+    @Test
     func hashable() {
         let set: Set<WallTime> = [WallTime(1), WallTime(1), WallTime(2)]
 
@@ -65,6 +85,13 @@ extension WallTimeTests {
     func init_valid() {
         #expect(WallTime(numberValue: 0) != nil)
         #expect(WallTime(numberValue: 1) != nil)
+    }
+
+    @Test
+    func isValid() {
+        #expect(WallTime.isValid(Number(0)))
+        #expect(WallTime.isValid(Number(1)))
+        #expect(!WallTime.isValid(Number(-1)))
     }
 
     @Test

@@ -78,7 +78,8 @@ extension BeatTime: TimeProtocol {
     /// - Parameter time:   The destination beat time.
     ///
     /// - Returns:  A ``DirectedDuration`` representing the distance and
-    ///             direction from this beat time to `time`.
+    ///             direction from this beat time to `time`, or `nil` if the
+    ///             result cannot be computed.
     public func duration(to time: Self) -> DirectedDuration<DurationType>? {
         let val1 = numberValue
         let val2 = time.numberValue

@@ -21,7 +21,8 @@ extension TimeBasis {
     ///
     /// - Parameter stringValue:    The string representation to parse.
     ///
-    /// - Throws:   `ParseError` if `stringValue` is not a recognized time basis.
+    /// - Throws:   ``ParseError/invalidTimeBasis(_:)`` if `stringValue` is not a
+    ///             recognized time basis.
     public init(stringValue: String) throws {
         guard let timeBasis = Self.timeBases[stringValue]
         else { throw ParseError.invalidTimeBasis(stringValue) }
@@ -76,6 +77,11 @@ extension TimeBasis: Codable {
     }
 }
 
+// MARK: - Comparable
+
+extension TimeBasis: Comparable {
+}
+
 // MARK: - CustomStringConvertible
 
  extension TimeBasis: CustomStringConvertible {
@@ -88,6 +94,11 @@ extension TimeBasis: Codable {
 // MARK: - Equatable
 
 extension TimeBasis: Equatable {
+}
+
+// MARK: - Hashable
+
+extension TimeBasis: Hashable {
 }
 
 // MARK: - Sendable

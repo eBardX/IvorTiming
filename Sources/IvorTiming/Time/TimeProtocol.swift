@@ -10,11 +10,18 @@ public protocol TimeProtocol<DurationType>: Codable,
                                             Hashable,
                                             InterpolatableKey,
                                             Sendable {
+
+    // MARK: Public Associated Types
+
     /// The type of duration used to measure the distance between two time values.
     associatedtype DurationType: DurationProtocol
 
+    // MARK: Public Type Properties
+
     /// The zero time value.
     static var zero: Self { get }
+
+    // MARK: Public Instance Methods
 
     /// Returns the directed duration from this time to another time.
     ///
@@ -36,6 +43,9 @@ public protocol TimeProtocol<DurationType>: Codable,
 // MARK: -
 
 extension TimeProtocol {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this time using the
     /// default format style.
     public func formatted() -> AttributedString {

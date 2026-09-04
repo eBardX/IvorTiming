@@ -29,6 +29,15 @@ extension BeatQuantizerTests {
     }
 
     @Test
+    func quantize_alreadyOnGrid() throws {
+        let q = try BeatQuantizer(factors: [4])
+
+        #expect(q.quantize("1/4") == "1/4")
+        #expect(q.quantize("3/4") == "3/4")
+        #expect(q.quantize(BeatTime(2)) == BeatTime(2))
+    }
+
+    @Test
     func quantize_equivalentFactors() throws {
         let q4  = try BeatQuantizer(factors: [4])
         let q8  = try BeatQuantizer(factors: [8])
@@ -38,15 +47,6 @@ extension BeatQuantizerTests {
 
         #expect(q48.quantize(bt) == q8.quantize(bt))
         #expect(q48.quantize(bt) != q4.quantize(bt))
-    }
-
-    @Test
-    func quantize_alreadyOnGrid() throws {
-        let q = try BeatQuantizer(factors: [4])
-
-        #expect(q.quantize("1/4") == "1/4")
-        #expect(q.quantize("3/4") == "3/4")
-        #expect(q.quantize(BeatTime(2)) == BeatTime(2))
     }
 
     @Test

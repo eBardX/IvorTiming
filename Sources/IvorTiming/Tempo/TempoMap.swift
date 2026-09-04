@@ -77,11 +77,12 @@ extension TempoMap {
 
     /// Calls the given closure for each entry in this tempo map, in order.
     ///
-    /// - Parameter body:   A closure that receives the beat time, tempo, and
-    ///                     optional extras for each entry.
-    public func forEach(_ body: (BeatTime, Tempo, Extras?) -> Void) {
+    /// - Parameter body:   A closure that receives the identity, beat time,
+    ///                     tempo, and optional extras for each entry.
+    public func forEach(_ body: (EntryID, BeatTime, Tempo, Extras?) -> Void) {
         entries.forEach {
-            body($0.beatTime,
+            body($0.entryID,
+                 $0.beatTime,
                  $0.tempo,
                  $0.extras)
         }
@@ -89,42 +90,29 @@ extension TempoMap {
 
     /// Inserts a tempo entry into this tempo map at the given beat time.
     ///
+    /// An entry that exactly duplicates one already present — same beat time,
+    /// tempo, and extras — carries no information beyond the original and is
+    /// silently ignored. Two entries at the same beat time with *different*
+    /// tempos are a deliberate, meaningful step (interpolation jumps
+    /// instantly at that beat time), and are unaffected by this check.
+    ///
     /// - Parameter beatTime:   The beat time at which the tempo takes effect.
     /// - Parameter tempo:      The tempo to insert.
     /// - Parameter extras:     Optional extra data attached to the entry.
     ///                         Defaults to `nil`.
+    ///
+    /// - Returns:  The identity that now addresses this entry — a freshly
+    ///             generated identity, unless the insertion collapsed into a
+    ///             pre-existing exact duplicate (see above), in which case the
+    ///             survivor's identity.
+    @discardableResult
     public mutating func insert(beatTime: BeatTime,
                                 tempo: Tempo,
-                                extras: Extras? = nil) {
-        entries.insert(Entry(beatTime: beatTime,
-                             tempo: tempo,
-                             extras: extras),
-                       at: insertionIndex(for: beatTime))
-
-        if extras != nil {
-            hasExtras = true
-        }
-    }
-
-    /// Returns a copy of this tempo map with a tempo entry added at the given
-    /// beat time.
-    ///
-    /// - Parameter beatTime:   The beat time at which the tempo takes effect.
-    /// - Parameter tempo:      The tempo to insert.
-    /// - Parameter extras:     Optional extra data attached to the entry.
-    ///                         Defaults to `nil`.
-    ///
-    /// - Returns:  A new tempo map with the entry inserted.
-    public func inserting(beatTime: BeatTime,
-                          tempo: Tempo,
-                          extras: Extras? = nil) -> Self {
-        var new = self
-
-        new.insert(beatTime: beatTime,
-                   tempo: tempo,
-                   extras: extras)
-
-        return new
+                                extras: Extras? = nil) -> EntryID {
+        _insert(entryID: EntryID(),
+                beatTime: beatTime,
+                tempo: tempo,
+                extras: extras)
     }
 
     /// Merges the entries from another tempo map into this tempo map.
@@ -144,18 +132,62 @@ extension TempoMap {
         hasExtras = hasExtras || other.hasExtras
     }
 
-    /// Returns a copy of this tempo map merged with another tempo map.
+    /// Moves the tempo entry with the given identity to a new beat time,
+    /// keeping its tempo and extras, and re-sorts it into place.
     ///
-    /// - Parameter other:  The tempo map to merge with.
+    /// Unlike ``update(entryID:tempo:extras:)``, this is expected to reorder
+    /// entries — that is the point of editing the beat time itself. Two
+    /// entries legitimately ending up at the same beat time (see
+    /// ``insert(beatTime:tempo:extras:)`` for the discontinuity use case) is
+    /// not treated as a collision to reject; the moved entry simply takes
+    /// its place among any others already there, exactly as a fresh
+    /// insertion would.
     ///
-    /// - Returns:  A new tempo map containing the entries from the two tempo
-    ///             maps.
-    public func merging(with other: Self) -> Self {
-        var new = self
+    /// The one case where `entryID` stops identifying the moved entry afterward is
+    /// when the move lands it exactly on top of another entry already
+    /// present — same beat time, tempo, and extras — the same exact-duplicate
+    /// case ``insert(beatTime:tempo:extras:)`` silently collapses. There, the
+    /// moved entry merges into that pre-existing one instead of being kept
+    /// separately, so `entryID` no longer names anything in the map; the returned
+    /// identity is the survivor's instead, which a caller must switch to
+    /// addressing from then on.
+    ///
+    /// - Parameter entryID:    The identity of the entry to move.
+    /// - Parameter beatTime:   The new beat time for the entry.
+    ///
+    /// - Returns:  The identity that now addresses this entry's content — `entryID`
+    ///             itself, unless the move merged it into a pre-existing exact
+    ///             duplicate, in which case the survivor's identity. `nil` if
+    ///             `entryID` did not identify any entry and nothing moved.
+    @discardableResult
+    public mutating func move(entryID: EntryID,
+                              to beatTime: BeatTime) -> EntryID? {
+        guard let position = firstIndex(entryID: entryID)
+        else { return nil }
 
-        new.merge(with: other)
+        let entry = entries.remove(at: position)
 
-        return new
+        let newID = _insert(entryID: entryID,
+                            beatTime: beatTime,
+                            tempo: entry.tempo,
+                            extras: entry.extras)
+
+        hasExtras = Self.hasExtras(in: entries)
+
+        return newID
+    }
+
+    /// Removes the tempo entry with the given identity, if present.
+    ///
+    /// - Parameter entryID:  The identity of the entry to remove. An identity
+    ///                       naming no entry is ignored.
+    public mutating func remove(entryID: EntryID) {
+        guard let position = firstIndex(entryID: entryID)
+        else { return }
+
+        entries.remove(at: position)
+
+        hasExtras = Self.hasExtras(in: entries)
     }
 
     /// Removes a matching tempo entry from this tempo map, if present.
@@ -179,24 +211,76 @@ extension TempoMap {
         }
     }
 
-    /// Returns a copy of this tempo map with a matching entry removed.
+    /// Replaces the tempo entry with the given identity, in place.
     ///
-    /// - Parameter beatTime:   The beat time of the entry to remove.
-    /// - Parameter tempo:      The tempo of the entry to remove.
-    /// - Parameter extras:     The optional extra data of the entry to remove.
+    /// Unlike a ``remove(beatTime:tempo:extras:)`` followed by an
+    /// ``insert(beatTime:tempo:extras:)``, this does not reorder entries.
+    /// That distinction only matters when more than one entry shares a beat
+    /// time: value-based removal cannot tell which of them was meant, and
+    /// insertion always lands after every entry already at that beat time —
+    /// so a remove-then-insert edit of one entry among ties silently changes
+    /// the order of entries that were never touched. Updating in place at a
+    /// known identity avoids both problems, and — unlike a position — that
+    /// identity keeps addressing this same entry across any other entry's
+    /// edit, so a caller never needs to re-resolve it first.
+    ///
+    /// - Parameter entryID:    The identity of the entry to replace. An
+    ///                         identity naming no entry is ignored.
+    /// - Parameter tempo:      The new tempo for the entry.
+    /// - Parameter extras:     The new optional extra data for the entry.
     ///                         Defaults to `nil`.
-    ///
-    /// - Returns:  A new tempo map with the matching entry removed.
-    public func removing(beatTime: BeatTime,
-                         tempo: Tempo,
-                         extras: Extras? = nil) -> Self {
-        var new = self
+    public mutating func update(entryID: EntryID,
+                                tempo: Tempo,
+                                extras: Extras? = nil) {
+        guard let position = firstIndex(entryID: entryID)
+        else { return }
 
-        new.remove(beatTime: beatTime,
-                   tempo: tempo,
-                   extras: extras)
+        entries[position] = Entry(entryID: entryID,
+                                  beatTime: entries[position].beatTime,
+                                  tempo: tempo,
+                                  extras: extras)
 
-        return new
+        //
+        // The edit may have turned this entry into an exact duplicate of another
+        // one already at the same beat time — see `insert(beatTime:tempo:extras:)`
+        // for why that combination carries no information beyond a single entry.
+        // Drop the other one rather than leave the duplicate in place. `Entry`'s
+        // own `==` already excludes identity, so comparing whole entries is enough
+        // to find one that only *differs* in which entry it is.
+        //
+        if let duplicate = entries.indices.first(where: {
+            entries[$0].entryID != entryID && entries[$0] == entries[position]
+        }) {
+            entries.remove(at: duplicate)
+        }
+
+        hasExtras = Self.hasExtras(in: entries)
+    }
+
+    // MARK: Private Instance Methods
+
+    @discardableResult
+    private mutating func _insert(entryID: EntryID,
+                                  beatTime: BeatTime,
+                                  tempo: Tempo,
+                                  extras: Extras?) -> EntryID {
+        if let existing = firstIndex(beatTime: beatTime,
+                                     tempo: tempo,
+                                     extras: extras) {
+            return entries[existing].entryID
+        }
+
+        entries.insert(Entry(entryID: entryID,
+                             beatTime: beatTime,
+                             tempo: tempo,
+                             extras: extras),
+                       at: insertionIndex(for: beatTime))
+
+        if extras != nil {
+            hasExtras = true
+        }
+
+        return entryID
     }
 }
 
@@ -204,7 +288,16 @@ extension TempoMap {
 
 extension TempoMap: Codable {
 
+    // MARK: Public Initializers
+
     /// Creates a tempo map by decoding from the provided decoder.
+    ///
+    /// Entries that exactly duplicate one another — same beat time, tempo, and
+    /// extras — are collapsed, keeping the first occurrence, the same rule
+    /// ``insert(beatTime:tempo:extras:)`` applies to a live tempo map. This is
+    /// needed here, not just belt-and-braces: a document saved before that dedup
+    /// rule existed can have duplicates already baked into its encoded form, and
+    /// decoding is the only place left to catch those.
     ///
     /// - Parameter decoder:    The decoder to read from.
     ///
@@ -215,11 +308,14 @@ extension TempoMap: Codable {
         self.defaultTempo = try container.decode(Tempo.self,
                                                  forKey: .defaultTempo)
 
-        self.entries = try container.decode([Entry].self,
-                                            forKey: .entries)
+        let decodedEntries = try container.decode([Entry].self,
+                                                  forKey: .entries)
 
+        self.entries = Self.deduplicated(decodedEntries)
         self.hasExtras = Self.hasExtras(in: entries)
     }
+
+    // MARK: Public Instance Methods
 
     /// Encodes this tempo map into the provided encoder.
     ///

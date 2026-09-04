@@ -1,7 +1,5 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
-private import XestiTools
-
 /// The basis used to measure time in a musical context.
 public enum TimeBasis {
     /// Musical beat time, measured in beats.
@@ -9,11 +7,6 @@ public enum TimeBasis {
 
     /// Wall-clock time, measured in seconds.
     case wall
-}
-
-// MARK: -
-
-extension TimeBasis {
 
     // MARK: Public Initializers
 
@@ -23,17 +16,19 @@ extension TimeBasis {
     ///
     /// - Throws:   ``ParseError/invalidTimeBasis(_:)`` if `stringValue` is not a
     ///             recognized time basis.
-    public init(stringValue: String) throws {
+    public init(stringValue: String) throws(ParseError) {
         guard let timeBasis = Self.timeBases[stringValue]
         else { throw ParseError.invalidTimeBasis(stringValue) }
 
         self = timeBasis
     }
+}
+
+// MARK: -
+
+extension TimeBasis {
 
     // MARK: Private Type Properties
-
-    private static let stringValues: [Self: String] = [.beat: "beat",
-                                                       .wall: "wall"]
 
     private static let timeBases: [String: Self] = ["beat": .beat,
                                                     "wall": .wall]
@@ -65,7 +60,7 @@ extension TimeBasis: Codable {
 
     // MARK: Public Instance Methods
 
-    /// Encodes this value into the provided encoder.
+    /// Encodes this time basis into the provided encoder.
     ///
     /// - Parameter encoder:    The encoder to write to.
     ///
@@ -84,12 +79,21 @@ extension TimeBasis: Comparable {
 
 // MARK: - CustomStringConvertible
 
- extension TimeBasis: CustomStringConvertible {
+extension TimeBasis: CustomStringConvertible {
+
+    // MARK: Public Instance Properties
+
     /// The string representation of this time basis.
     public var description: String {
-        Self.stringValues[self].require()
+        switch self {
+        case .beat:
+            "beat"
+
+        case .wall:
+            "wall"
+        }
     }
- }
+}
 
 // MARK: - Equatable
 

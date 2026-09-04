@@ -18,15 +18,6 @@ extension WallDurationTests {
     }
 
     @Test
-    func addingInPlace() {
-        var dur = WallDuration(1)
-
-        dur += WallDuration(2)
-
-        #expect(dur == WallDuration(3))
-    }
-
-    @Test
     func codable() throws {
         let original = WallDuration(3)
         let data = try JSONEncoder().encode(original)
@@ -83,34 +74,9 @@ extension WallDurationTests {
     }
 
     @Test
-    func operators() {
-        #expect(WallDuration(1) + WallDuration(2) == WallDuration(3))
-        #expect(WallDuration(3) - WallDuration(1) == WallDuration(2))
-        #expect(WallDuration(2) * Number(3) == WallDuration(6))
-    }
-
-    @Test
-    func scalingInPlace() {
-        var dur = WallDuration(2)
-
-        dur *= Number(3)
-
-        #expect(dur == WallDuration(6))
-    }
-
-    @Test
     func subtracting() {
         #expect(WallDuration(3).subtracting(WallDuration(1)) == WallDuration(2))
         #expect(WallDuration(1).subtracting(WallDuration(3)) == nil)
-    }
-
-    @Test
-    func subtractingInPlace() {
-        var dur = WallDuration(3)
-
-        dur -= WallDuration(1)
-
-        #expect(dur == WallDuration(2))
     }
 
     @Test

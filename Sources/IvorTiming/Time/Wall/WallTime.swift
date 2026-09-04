@@ -6,24 +6,6 @@ public import XestiTools
 /// A point in wall-clock time, measured in seconds from a reference epoch.
 public struct WallTime: NumberRepresentable {
 
-    // MARK: Public Type Properties
-
-    /// The zero wall time.
-    public static let zero = Self(0)
-
-    // MARK: Public Type Methods
-
-    /// Returns a Boolean value indicating whether the given number is a valid
-    /// wall time.
-    ///
-    /// - Parameter numberValue:    The number to validate.
-    ///
-    /// - Returns:  `true` if `numberValue` is rational and non-negative;
-    ///             otherwise, `false`.
-    public static func isValid(_ numberValue: Number) -> Bool {
-        numberValue.isRational && !numberValue.isNegative
-    }
-
     // MARK: Public Initializers
 
     /// Creates a ``WallTime`` from a rational number value.
@@ -45,9 +27,35 @@ public struct WallTime: NumberRepresentable {
     public let numberValue: Number
 }
 
+// MARK: -
+
+extension WallTime {
+
+    // MARK: Public Type Properties
+
+    /// The zero wall time.
+    public static let zero = Self(0)
+
+    // MARK: Public Type Methods
+
+    /// Returns a Boolean value indicating whether the given number is a valid
+    /// wall time.
+    ///
+    /// - Parameter numberValue:    The number to validate.
+    ///
+    /// - Returns:  `true` if `numberValue` is rational and non-negative;
+    ///             otherwise, `false`.
+    public static func isValid(_ numberValue: Number) -> Bool {
+        numberValue.isRational && !numberValue.isNegative
+    }
+}
+
 // MARK: - InterpolatableKey
 
 extension WallTime: InterpolatableKey {
+
+    // MARK: Public Instance Methods
+
     /// Returns the fractional position of this time between two boundary times.
     ///
     /// - Parameter startValue:  The lower boundary time.
@@ -105,11 +113,11 @@ extension WallTime: TimeProtocol {
     /// - Returns:  The resulting wall time, or `nil` if the result is invalid.
     public func moved(by directedDuration: DirectedDuration<DurationType>) -> Self? {
         switch directedDuration.direction {
-        case .forward:
-            Self(numberValue: numberValue + directedDuration.duration.numberValue)
-
         case .backward:
             Self(numberValue: numberValue - directedDuration.duration.numberValue)
+
+        case .forward:
+            Self(numberValue: numberValue + directedDuration.duration.numberValue)
 
         case .same:
             self

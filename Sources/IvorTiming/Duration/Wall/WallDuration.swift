@@ -5,24 +5,6 @@ public import XestiNumbers
 /// A non-negative duration of wall-clock time, measured in seconds.
 public struct WallDuration: NumberRepresentable {
 
-    // MARK: Public Type Properties
-
-    /// The zero wall duration.
-    public static let zero = Self(0)
-
-    // MARK: Public Type Methods
-
-    /// Returns a Boolean value indicating whether the given number is a valid
-    /// wall duration.
-    ///
-    /// - Parameter numberValue:    The number to validate.
-    ///
-    /// - Returns:  `true` if `numberValue` is rational and non-negative;
-    ///             otherwise, `false`.
-    public static func isValid(_ numberValue: Number) -> Bool {
-        numberValue.isRational && !numberValue.isNegative
-    }
-
     // MARK: Public Initializers
 
     /// Creates a ``WallDuration`` from a rational number value.
@@ -42,6 +24,29 @@ public struct WallDuration: NumberRepresentable {
 
     /// The rational number of seconds representing this duration.
     public let numberValue: Number
+}
+
+// MARK: -
+
+extension WallDuration {
+
+    // MARK: Public Type Properties
+
+    /// The zero wall duration.
+    public static let zero = Self(0)
+
+    // MARK: Public Type Methods
+
+    /// Returns a Boolean value indicating whether the given number is a valid
+    /// wall duration.
+    ///
+    /// - Parameter numberValue:    The number to validate.
+    ///
+    /// - Returns:  `true` if `numberValue` is rational and non-negative;
+    ///             otherwise, `false`.
+    public static func isValid(_ numberValue: Number) -> Bool {
+        numberValue.isRational && !numberValue.isNegative
+    }
 }
 
 // MARK: - DurationProtocol

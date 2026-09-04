@@ -6,22 +6,6 @@ public import XestiTools
 /// A tempo in beats per minute, represented as a positive unsigned integer.
 public struct Tempo: UIntRepresentable {
 
-    // MARK: Public Type Properties
-
-    /// The default tempo of 60 beats per minute.
-    public static let `default` = Self(60)
-
-    // MARK: Public Type Methods
-
-    /// Returns a Boolean value indicating whether the given unsigned integer is a valid tempo.
-    ///
-    /// - Parameter uintValue:  The unsigned integer to validate.
-    ///
-    /// - Returns:  `true` if `uintValue` is greater than zero; otherwise, `false`.
-    public static func isValid(_ uintValue: UInt) -> Bool {
-        uintValue > 0
-    }
-
     // MARK: Public Initializers
 
     /// Creates a ``Tempo`` from an unsigned integer value.
@@ -45,6 +29,22 @@ public struct Tempo: UIntRepresentable {
 // MARK: -
 
 extension Tempo {
+
+    // MARK: Public Type Properties
+
+    /// The default tempo of 60 beats per minute.
+    public static let `default` = Self(60)
+
+    // MARK: Public Type Methods
+
+    /// Returns a Boolean value indicating whether the given unsigned integer is a valid tempo.
+    ///
+    /// - Parameter uintValue:  The unsigned integer to validate.
+    ///
+    /// - Returns:  `true` if `uintValue` is greater than zero; otherwise, `false`.
+    public static func isValid(_ uintValue: UInt) -> Bool {
+        uintValue > 0
+    }
 
     // MARK: Public Instance Properties
 

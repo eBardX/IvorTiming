@@ -54,6 +54,9 @@ extension Tempo.FormatStyle: FormatStyle {
 // MARK: -
 
 extension Tempo {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this tempo using the default format style.
     public func formatted() -> AttributedString {
         FormatStyle().format(self)

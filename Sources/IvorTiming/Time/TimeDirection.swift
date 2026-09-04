@@ -5,11 +5,11 @@ public enum TimeDirection {
     /// Movement toward an earlier point in time.
     case backward
 
-    /// No movement in time.
-    case same
-
     /// Movement toward a later point in time.
     case forward
+
+    /// No movement in time.
+    case same
 }
 
 // MARK: - Codable

@@ -21,9 +21,18 @@ public struct BeatQuantizer {
     /// - Throws:   ``BeatQuantizer/Error/emptyFactors`` if `factors` is empty,
     ///             or ``BeatQuantizer/Error/invalidFactor(_:)`` if any factor is
     ///             not positive.
-    public init(factors: [Int]) throws {
+    public init(factors: [Int]) throws(Error) {
         self.lcmFactor = try Self._computeLCMFactor(factors)
     }
+
+    // MARK: Private Instance Properties
+
+    private let lcmFactor: Number
+}
+
+// MARK: -
+
+extension BeatQuantizer {
 
     // MARK: Public Instance Methods
 
@@ -41,7 +50,7 @@ public struct BeatQuantizer {
 
     // MARK: Private Type Methods
 
-    private static func _computeLCMFactor(_ factors: [Int]) throws -> Number {
+    private static func _computeLCMFactor(_ factors: [Int]) throws(Error) -> Number {
         guard !factors.isEmpty
         else { throw Error.emptyFactors }
 
@@ -52,10 +61,6 @@ public struct BeatQuantizer {
 
         return factors.reduce(Number(1)) { lcm($0, Number($1)) }
     }
-
-    // MARK: Private Instance Properties
-
-    private let lcmFactor: Number
 }
 
 // MARK: - Sendable

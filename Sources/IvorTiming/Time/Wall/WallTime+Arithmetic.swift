@@ -3,6 +3,9 @@
 public import XestiNumbers
 
 extension WallTime {
+
+    // MARK: Public Type Methods
+
     /// Returns a wall time advanced by a duration.
     ///
     /// - Parameter time:  The wall time to advance.

@@ -3,6 +3,9 @@
 public import XestiTools
 
 extension BeatQuantizer {
+
+    // MARK: Public Nested Types
+
     /// An error that can occur while performing a beat quantizer operation.
     public enum Error {
         /// The subdivision factor array is empty.
@@ -16,7 +19,6 @@ extension BeatQuantizer {
 // MARK: - EnhancedError
 
 extension BeatQuantizer.Error: EnhancedError {
-
     /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")
@@ -32,6 +34,11 @@ extension BeatQuantizer.Error: EnhancedError {
             "Invalid subdivision factor: \(factor)"
         }
     }
+}
+
+// MARK: - Equatable
+
+extension BeatQuantizer.Error: Equatable {
 }
 
 // MARK: - Sendable

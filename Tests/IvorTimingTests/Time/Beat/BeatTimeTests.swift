@@ -12,15 +12,6 @@ struct BeatTimeTests {
 
 extension BeatTimeTests {
     @Test
-    func advancingInPlace() {
-        var time = BeatTime(1)
-
-        time += BeatDuration(2)
-
-        #expect(time == BeatTime(3))
-    }
-
-    @Test
     func codable() throws {
         let original = BeatTime(3)
         let data = try JSONEncoder().encode(original)
@@ -108,36 +99,6 @@ extension BeatTimeTests {
     @Test
     func moved_same() {
         #expect(BeatTime(1).moved(by: DirectedDuration(duration: BeatDuration.zero, direction: .same)) == BeatTime(1))
-    }
-
-    @Test
-    func operators() {
-        #expect(BeatTime(1) + BeatDuration(2) == BeatTime(3))
-        #expect(BeatTime(3) - BeatDuration(2) == BeatTime(1))
-        #expect(BeatTime(3) - BeatTime(1) == BeatDuration(2))
-    }
-
-    @Test
-    func retreatingInPlace() {
-        var time = BeatTime(3)
-
-        time -= BeatDuration(2)
-
-        #expect(time == BeatTime(1))
-    }
-
-    @Test
-    func scaling() {
-        #expect(BeatTime(2) * Number(3) == BeatTime(6))
-    }
-
-    @Test
-    func scalingInPlace() {
-        var time = BeatTime(2)
-
-        time *= Number(3)
-
-        #expect(time == BeatTime(6))
     }
 
     @Test

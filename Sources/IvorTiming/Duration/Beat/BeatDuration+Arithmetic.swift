@@ -3,6 +3,9 @@
 public import XestiNumbers
 
 extension BeatDuration {
+
+    // MARK: Public Type Methods
+
     /// Returns the sum of two beat durations.
     ///
     /// - Parameter dur1:   The first beat duration.

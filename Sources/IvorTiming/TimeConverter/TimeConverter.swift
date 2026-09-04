@@ -6,7 +6,7 @@ private import XestiTools
 /// A type that converts between beat time and wall time.
 ///
 /// Create a `TimeConverter` from a ``TempoMap`` and use it to convert times.
-/// The converter captures the tempo map\xe2\x80\x99s state at the moment of creation and
+/// The converter captures the tempo map’s state at the moment of creation and
 /// is unaffected by subsequent changes to the source map.
 public struct TimeConverter {
 
@@ -15,7 +15,7 @@ public struct TimeConverter {
     /// Creates a time converter from the given tempo map.
     ///
     /// - Parameter tempoMap:   The tempo map to snapshot.
-    public init(_ tempoMap: TempoMap) {
+    public init(tempoMap: TempoMap) {
         self.defaultTempo = tempoMap.defaultTempo
         self.entries = tempoMap.entries.map {
             Entry(beatTime: $0.beatTime,

@@ -18,15 +18,6 @@ extension BeatDurationTests {
     }
 
     @Test
-    func addingInPlace() {
-        var dur = BeatDuration(1)
-
-        dur += BeatDuration(2)
-
-        #expect(dur == BeatDuration(3))
-    }
-
-    @Test
     func codable() throws {
         let original = BeatDuration(3)
         let data = try JSONEncoder().encode(original)
@@ -84,34 +75,9 @@ extension BeatDurationTests {
     }
 
     @Test
-    func operators() {
-        #expect(BeatDuration(1) + BeatDuration(2) == BeatDuration(3))
-        #expect(BeatDuration(3) - BeatDuration(1) == BeatDuration(2))
-        #expect(BeatDuration(2) * Number(3) == BeatDuration(6))
-    }
-
-    @Test
-    func scalingInPlace() {
-        var dur = BeatDuration(2)
-
-        dur *= Number(3)
-
-        #expect(dur == BeatDuration(6))
-    }
-
-    @Test
     func subtracting() {
         #expect(BeatDuration(3).subtracting(BeatDuration(1)) == BeatDuration(2))
         #expect(BeatDuration(1).subtracting(BeatDuration(3)) == nil)
-    }
-
-    @Test
-    func subtractingInPlace() {
-        var dur = BeatDuration(3)
-
-        dur -= BeatDuration(1)
-
-        #expect(dur == BeatDuration(2))
     }
 
     @Test

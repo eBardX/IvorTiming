@@ -12,9 +12,12 @@ struct TimeConverterTests {
 extension TimeConverterTests {
     @Test
     func beatTime_beforeFirstEntry() throws {
-        let t120  = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap().inserting(beatTime: BeatTime(4),
-                                                       tempo: t120))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
         #expect(tconv.beatTime(at: WallTime(1)) == BeatTime(2))
@@ -22,9 +25,12 @@ extension TimeConverterTests {
 
     @Test
     func beatTime_constantTempo120() throws {
-        let t120  = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap().inserting(beatTime: .zero,
-                                                       tempo: t120))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: .zero, tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
         #expect(tconv.beatTime(at: WallTime(1)) == BeatTime(2))
@@ -33,7 +39,7 @@ extension TimeConverterTests {
 
     @Test
     func beatTime_constantTempo60() {
-        let tconv = TimeConverter(TempoMap())
+        let tconv = TimeConverter(tempoMap: TempoMap())
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
         #expect(tconv.beatTime(at: WallTime(2)) == BeatTime(2))
@@ -42,7 +48,7 @@ extension TimeConverterTests {
 
     @Test
     func roundTrip() {
-        let tconv    = TimeConverter(TempoMap())
+        let tconv    = TimeConverter(tempoMap: TempoMap())
         let beatTime = BeatTime(3)
         let wallTime = tconv.wallTime(at: beatTime)
 
@@ -53,10 +59,13 @@ extension TimeConverterTests {
     // multi-entry code path without transcendental rounding error.
     @Test
     func roundTrip_multiEntry() throws {
-        let t120  = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap()
-            .inserting(beatTime: BeatTime(0), tempo: t120)
-            .inserting(beatTime: BeatTime(4), tempo: t120))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: t120)
+        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
         let beatTime = BeatTime(2)
         let wallTime = tconv.wallTime(at: beatTime)
 
@@ -65,9 +74,12 @@ extension TimeConverterTests {
 
     @Test
     func wallTime_beforeFirstEntry() throws {
-        let t120  = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap().inserting(beatTime: BeatTime(4),
-                                                       tempo: t120))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
         #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1))
@@ -75,9 +87,12 @@ extension TimeConverterTests {
 
     @Test
     func wallTime_constantTempo120() throws {
-        let t120  = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap().inserting(beatTime: .zero,
-                                                       tempo: t120))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: .zero, tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
         #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1))
@@ -86,7 +101,7 @@ extension TimeConverterTests {
 
     @Test
     func wallTime_constantTempo60() {
-        let tconv = TimeConverter(TempoMap())
+        let tconv = TimeConverter(tempoMap: TempoMap())
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
         #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(2))
@@ -97,9 +112,12 @@ extension TimeConverterTests {
     func wallTime_varyingTempo_isMonotone() throws {
         let t60  = try #require(Tempo(uintValue: 60))
         let t120 = try #require(Tempo(uintValue: 120))
-        let tconv = TimeConverter(TempoMap()
-            .inserting(beatTime: BeatTime(0), tempo: t60)
-            .inserting(beatTime: BeatTime(4), tempo: t120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: t60)
+        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+
+        let tconv = TimeConverter(tempoMap: tmap)
 
         let wt1 = tconv.wallTime(at: BeatTime(1))
         let wt2 = tconv.wallTime(at: BeatTime(2))

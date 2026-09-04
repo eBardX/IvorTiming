@@ -9,8 +9,13 @@ public protocol DurationProtocol: Codable,
                                   Equatable,
                                   Hashable,
                                   Sendable {
+
+    // MARK: Public Instance Properties
+
     /// A Boolean value indicating whether this duration is zero.
     var isZero: Bool { get }
+
+    // MARK: Public Instance Methods
 
     /// Returns the sum of this duration and another, or `nil` if the result
     /// is invalid.
@@ -52,6 +57,9 @@ public protocol DurationProtocol: Codable,
 // MARK: -
 
 extension DurationProtocol {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this duration using the
     /// default format style.
     public func formatted() -> AttributedString {

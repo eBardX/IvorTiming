@@ -5,24 +5,6 @@ public import XestiNumbers
 /// A non-negative duration measured in musical beats.
 public struct BeatDuration: NumberRepresentable {
 
-    // MARK: Public Type Properties
-
-    /// The zero beat duration.
-    public static let zero = Self(0)
-
-    // MARK: Public Type Methods
-
-    /// Returns a Boolean value indicating whether the given number is a valid
-    /// beat duration.
-    ///
-    /// - Parameter numberValue:    The number to validate.
-    ///
-    /// - Returns:  `true` if `numberValue` is rational and non-negative;
-    ///             otherwise, `false`.
-    public static func isValid(_ numberValue: Number) -> Bool {
-        numberValue.isRational && !numberValue.isNegative
-    }
-
     // MARK: Public Initializers
 
     /// Creates a ``BeatDuration`` from a rational number value.
@@ -42,6 +24,29 @@ public struct BeatDuration: NumberRepresentable {
 
     /// The rational number of beats representing this duration.
     public let numberValue: Number
+}
+
+// MARK: -
+
+extension BeatDuration {
+
+    // MARK: Public Type Properties
+
+    /// The zero beat duration.
+    public static let zero = Self(0)
+
+    // MARK: Public Type Methods
+
+    /// Returns a Boolean value indicating whether the given number is a valid
+    /// beat duration.
+    ///
+    /// - Parameter numberValue:    The number to validate.
+    ///
+    /// - Returns:  `true` if `numberValue` is rational and non-negative;
+    ///             otherwise, `false`.
+    public static func isValid(_ numberValue: Number) -> Bool {
+        numberValue.isRational && !numberValue.isNegative
+    }
 }
 
 // MARK: - DurationProtocol

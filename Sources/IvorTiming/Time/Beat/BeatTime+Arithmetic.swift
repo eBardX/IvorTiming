@@ -3,6 +3,9 @@
 public import XestiNumbers
 
 extension BeatTime {
+
+    // MARK: Public Type Methods
+
     /// Returns a beat time advanced by a duration.
     ///
     /// - Parameter time:  The beat time to advance.

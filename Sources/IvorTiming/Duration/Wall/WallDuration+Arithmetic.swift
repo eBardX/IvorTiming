@@ -3,6 +3,9 @@
 public import XestiNumbers
 
 extension WallDuration {
+
+    // MARK: Public Type Methods
+
     /// Returns the sum of two wall durations.
     ///
     /// - Parameter dur1:   The first wall duration.

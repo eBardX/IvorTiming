@@ -4,7 +4,6 @@ public import XestiTools
 
 /// An error that can occur while parsing a string value.
 public enum ParseError {
-
     /// The time basis is unrecognized.
     case invalidTimeBasis(String)
 }
@@ -12,7 +11,6 @@ public enum ParseError {
 // MARK: - EnhancedError
 
 extension ParseError: EnhancedError {
-
     /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")
@@ -25,6 +23,11 @@ extension ParseError: EnhancedError {
             "Invalid time basis: ‘\(value)’"
         }
     }
+}
+
+// MARK: - Equatable
+
+extension ParseError: Equatable {
 }
 
 // MARK: - Sendable

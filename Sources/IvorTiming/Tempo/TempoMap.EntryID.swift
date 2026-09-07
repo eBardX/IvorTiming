@@ -11,18 +11,18 @@ extension TempoMap {
     /// A stable identity for a single entry in a ``TempoMap``, represented as a
     /// validated string.
     ///
-    /// An entry's beat time, tempo, and extras can all change — via
+    /// An entry’s beat time, tempo, and extras can all change — via
     /// ``TempoMap/update(entryID:tempo:extras:)`` or ``TempoMap/move(entryID:to:)`` — without
     /// affecting its identity, so a caller can keep addressing the same entry across
     /// an edit that reorders it, rather than recomputing which ordinal position it
     /// landed on.
     ///
-    /// Not persisted: `TempoMap.Entry`'s `Codable` conformance never encodes an
-    /// entry's identity, and assigns every decoded entry a fresh one, the same as a
-    /// newly inserted entry. An entry's identity is therefore stable only within one
-    /// in-memory tempo map's lifetime — never across an encode/decode round trip, and
+    /// Not persisted: `TempoMap.Entry`’s `Codable` conformance never encodes an
+    /// entry’s identity, and assigns every decoded entry a fresh one, the same as a
+    /// newly inserted entry. An entry’s identity is therefore stable only within one
+    /// in-memory tempo map’s lifetime — never across an encode/decode round trip, and
     /// so never across a save and reopen.
-    public struct EntryID: StringRepresentable {
+    public struct EntryID {
 
         // MARK: Public Initializers
 
@@ -70,4 +70,9 @@ extension TempoMap.EntryID {
     private nonisolated(unsafe) static let validPattern = /E\$[0-9A-Za-z]{22}/
 
     private static let validPrefix = "E$"
+}
+
+// MARK: - StringRepresentable
+
+extension TempoMap.EntryID: StringRepresentable {
 }

@@ -47,17 +47,17 @@ extension TimeConverter {
             if tempoChange < 0 {
                 let scale = sqrt(-tempoChange / startTempo)
 
-                wallDuration = WallDuration(beatLength * referenceTempoValue / sqrt(startTempo * -tempoChange) * atanh(scale))
+                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / sqrt(startTempo * -tempoChange) * atanh(scale)).doubleValue)
             } else if tempoChange > 0 {
                 let scale = sqrt(tempoChange / startTempo)
 
-                wallDuration = WallDuration(beatLength * referenceTempoValue / sqrt(startTempo * tempoChange) * atan(scale))
+                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / sqrt(startTempo * tempoChange) * atan(scale)).doubleValue)
             } else {
-                wallDuration = WallDuration(beatLength * referenceTempoValue / startTempo)
+                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / startTempo).doubleValue)
             }
 
             let wallTime: WallTime = if index == 0 {
-                WallTime(entries[0].beatTime.numberValue * referenceTempoValue / startTempo)
+                WallTime(seconds: (entries[0].beatTime.numberValue * referenceTempoValue / startTempo).doubleValue)
             } else {
                 entries[index - 1].wallTime + entries[index - 1].wallDuration
             }

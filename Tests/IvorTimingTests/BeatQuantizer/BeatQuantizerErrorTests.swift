@@ -16,6 +16,18 @@ extension BeatQuantizerErrorTests {
     }
 
     @Test
+    func equality() {
+        #expect(BeatQuantizer.Error.emptyFactors == .emptyFactors)
+        #expect(BeatQuantizer.Error.invalidFactor(1) == .invalidFactor(1))
+    }
+
+    @Test
+    func inequality() {
+        #expect(BeatQuantizer.Error.emptyFactors != .invalidFactor(1))
+        #expect(BeatQuantizer.Error.invalidFactor(1) != .invalidFactor(2))
+    }
+
+    @Test
     func message_emptyFactors() {
         #expect(BeatQuantizer.Error.emptyFactors.message == "The subdivision factors must not be empty")
     }

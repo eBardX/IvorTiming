@@ -75,6 +75,19 @@ extension BeatDurationTests {
     }
 
     @Test
+    func plain() {
+        #expect(BeatDuration(4).plain == "4")
+        #expect(BeatDuration(Number(3) / Number(4)).plain == "3/4")
+    }
+
+    @Test
+    func plain_roundTrip() {
+        #expect(BeatDuration(plain: "4") == BeatDuration(4))
+        #expect(BeatDuration(plain: "3/4") == BeatDuration(Number(3) / Number(4)))
+        #expect(BeatDuration(plain: "not a number") == nil)
+    }
+
+    @Test
     func subtracting() {
         #expect(BeatDuration(3).subtracting(BeatDuration(1)) == BeatDuration(2))
         #expect(BeatDuration(1).subtracting(BeatDuration(3)) == nil)

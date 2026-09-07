@@ -3,6 +3,7 @@
 @testable import IvorTiming
 import Testing
 import XestiNumbers
+import XestiTools
 
 struct WallDurationArithmeticTests {
 }

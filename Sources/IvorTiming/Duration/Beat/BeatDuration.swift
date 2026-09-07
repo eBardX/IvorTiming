@@ -3,7 +3,7 @@
 public import XestiNumbers
 
 /// A non-negative duration measured in musical beats.
-public struct BeatDuration: NumberRepresentable {
+public struct BeatDuration {
 
     // MARK: Public Initializers
 
@@ -20,10 +20,27 @@ public struct BeatDuration: NumberRepresentable {
         self.numberValue = numberValue
     }
 
+    /// Creates a beat duration by parsing its plain string representation, returning `nil` if the
+    /// string cannot be parsed or is out of range.
+    ///
+    /// - Parameter plain:  The plain string representation of the beat duration (as produced by
+    ///                     `plain`).
+    public init?(plain: String) {
+        guard let numberValue = Number(plain)
+        else { return nil }
+
+        self.init(numberValue: numberValue)
+    }
+
     // MARK: Public Instance Properties
 
     /// The rational number of beats representing this duration.
     public let numberValue: Number
+
+    /// The plain string representation of this beat duration.
+    public var plain: String {
+        description
+    }
 }
 
 // MARK: -
@@ -102,4 +119,9 @@ extension BeatDuration: DurationProtocol {
     public func subtracting(_ other: Self) -> Self? {
         Self(numberValue: numberValue - other.numberValue)
     }
+}
+
+// MARK: - NumberRepresentable
+
+extension BeatDuration: NumberRepresentable {
 }

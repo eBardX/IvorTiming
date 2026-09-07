@@ -3,7 +3,7 @@
 import Foundation
 @testable import IvorTiming
 import Testing
-import XestiNumbers
+import XestiTools
 
 struct WallTimeTests {
 }
@@ -51,6 +51,13 @@ extension WallTimeTests {
     }
 
     @Test
+    func formatted() {
+        let plain = WallTime(1_500).formatted().characters.reduce(into: "") { $0.append($1) }
+
+        #expect(plain == "1.500")
+    }
+
+    @Test
     func fraction() {
         let start = WallTime(0)
         let end = WallTime(4)
@@ -68,21 +75,9 @@ extension WallTimeTests {
     }
 
     @Test
-    func init_invalid() {
-        #expect(WallTime(numberValue: -1) == nil)
-    }
-
-    @Test
-    func init_valid() {
-        #expect(WallTime(numberValue: 0) != nil)
-        #expect(WallTime(numberValue: 1) != nil)
-    }
-
-    @Test
-    func isValid() {
-        #expect(WallTime.isValid(Number(0)))
-        #expect(WallTime.isValid(Number(1)))
-        #expect(!WallTime.isValid(Number(-1)))
+    func init_uintValue() {
+        #expect(WallTime(uintValue: 0) != nil)
+        #expect(WallTime(uintValue: 1) != nil)
     }
 
     @Test
@@ -102,8 +97,26 @@ extension WallTimeTests {
     }
 
     @Test
+    func plain() {
+        #expect(WallTime(0).plain == "0")
+        #expect(WallTime(1_000).plain == "1")
+        #expect(WallTime(1_500).plain == "1.5")
+        #expect(WallTime(1_050).plain == "1.05")
+        #expect(WallTime(1_005).plain == "1.005")
+    }
+
+    @Test
+    func plain_roundTrip() {
+        #expect(WallTime(plain: "1") == WallTime(1_000))
+        #expect(WallTime(plain: "1.5") == WallTime(1_500))
+        #expect(WallTime(plain: "1.05") == WallTime(1_050))
+        #expect(WallTime(plain: "1.005") == WallTime(1_005))
+        #expect(WallTime(plain: "not a number") == nil)
+    }
+
+    @Test
     func zero() throws {
-        let z = try #require(WallTime(numberValue: 0))
+        let z = try #require(WallTime(uintValue: 0))
 
         #expect(z == .zero)
     }

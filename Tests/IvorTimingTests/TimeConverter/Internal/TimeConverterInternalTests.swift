@@ -3,6 +3,7 @@
 @testable import IvorTiming
 import Testing
 import XestiNumbers
+import XestiTools
 
 struct TimeConverterInternalTests {
 }
@@ -34,8 +35,8 @@ extension TimeConverterInternalTests {
 
         let tconv = TimeConverter(tempoMap: tmap)
 
-        #expect(tconv.floorIndex(for: WallTime(0.5)) == 0)
-        #expect(tconv.floorIndex(for: WallTime(2)) == 1)
+        #expect(tconv.floorIndex(for: WallTime(500)) == 0)
+        #expect(tconv.floorIndex(for: WallTime(2_000)) == 1)
     }
 
     @Test
@@ -51,8 +52,8 @@ extension TimeConverterInternalTests {
         tconv.updateDerivedProperties()
 
         #expect(tconv.entries[0].wallTime == .zero)
-        #expect(tconv.entries[0].wallDuration == WallDuration(1))
-        #expect(tconv.entries[1].wallTime == WallTime(1))
+        #expect(tconv.entries[0].wallDuration == WallDuration(1_000))
+        #expect(tconv.entries[1].wallTime == WallTime(1_000))
     }
 
     @Test

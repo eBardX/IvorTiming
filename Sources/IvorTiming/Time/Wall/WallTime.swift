@@ -1,30 +1,46 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
-public import XestiNumbers
 public import XestiTools
 
-/// A point in wall-clock time, measured in seconds from a reference epoch.
-public struct WallTime: NumberRepresentable {
+/// A point in wall-clock time, measured in milliseconds from a reference epoch.
+public struct WallTime {
 
     // MARK: Public Initializers
 
-    /// Creates a ``WallTime`` from a rational number value.
+    /// Creates a wall time by parsing its plain string representation, returning `nil` if the
+    /// string cannot be parsed or is out of range.
     ///
-    /// - Parameter numberValue:    The rational number of seconds.
-    ///
-    /// - Returns:  A new ``WallTime``, or `nil` if `numberValue` is not a valid
-    ///             wall time.
-    public init?(numberValue: Number) {
-        guard Self.isValid(numberValue)
+    /// - Parameter plain:  The plain string representation of the wall time, in seconds (as
+    ///                     produced by `plain`).
+    public init?(plain: String) {
+        guard let milliseconds = parseWallSeconds(plain)
         else { return nil }
 
-        self.numberValue = numberValue
+        self.init(uintValue: milliseconds)
+    }
+
+    /// Creates a ``WallTime`` from a millisecond count.
+    ///
+    /// - Parameter uintValue:  The number of milliseconds since the reference epoch.
+    public init?(uintValue: UInt) {
+        self.uintValue = uintValue
     }
 
     // MARK: Public Instance Properties
 
-    /// The rational number of seconds representing this time.
-    public let numberValue: Number
+    /// The number of milliseconds since the reference epoch representing this time.
+    public let uintValue: UInt
+
+    /// The number of seconds since the reference epoch representing this time.
+    public var doubleValue: Double {
+        Double(uintValue) / 1_000
+    }
+
+    /// The plain string representation of this wall time, in seconds, omitting trailing zero
+    /// decimal digits.
+    public var plain: String {
+        formatWallSeconds(uintValue)
+    }
 }
 
 // MARK: -
@@ -36,17 +52,22 @@ extension WallTime {
     /// The zero wall time.
     public static let zero = Self(0)
 
-    // MARK: Public Type Methods
+    // MARK: Internal Initializers
 
-    /// Returns a Boolean value indicating whether the given number is a valid
-    /// wall time.
-    ///
-    /// - Parameter numberValue:    The number to validate.
-    ///
-    /// - Returns:  `true` if `numberValue` is rational and non-negative;
-    ///             otherwise, `false`.
-    public static func isValid(_ numberValue: Number) -> Bool {
-        numberValue.isRational && !numberValue.isNegative
+    // Rounds to the nearest millisecond.
+    internal init(seconds: Double) {
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+    }
+}
+
+// MARK: - CustomStringConvertible
+
+extension WallTime {
+
+    // MARK: Public Instance Properties
+
+    public var description: String {
+        plain
     }
 }
 
@@ -88,16 +109,13 @@ extension WallTime: TimeProtocol {
     ///             direction from this wall time to `time`, or `nil` if the
     ///             result cannot be computed.
     public func duration(to time: Self) -> DirectedDuration<DurationType>? {
-        let val1 = numberValue
-        let val2 = time.numberValue
-
-        if val1 < val2 {
-            return DirectedDuration(duration: WallDuration(val2 - val1),
+        if uintValue < time.uintValue {
+            return DirectedDuration(duration: WallDuration(time.uintValue - uintValue),
                                     direction: .forward)
         }
 
-        if val1 > val2 {
-            return DirectedDuration(duration: WallDuration(val1 - val2),
+        if uintValue > time.uintValue {
+            return DirectedDuration(duration: WallDuration(uintValue - time.uintValue),
                                     direction: .backward)
         }
 
@@ -114,13 +132,21 @@ extension WallTime: TimeProtocol {
     public func moved(by directedDuration: DirectedDuration<DurationType>) -> Self? {
         switch directedDuration.direction {
         case .backward:
-            Self(numberValue: numberValue - directedDuration.duration.numberValue)
+            guard uintValue >= directedDuration.duration.uintValue
+            else { return nil }
+
+            return Self(uintValue: uintValue - directedDuration.duration.uintValue)
 
         case .forward:
-            Self(numberValue: numberValue + directedDuration.duration.numberValue)
+            return Self(uintValue: uintValue + directedDuration.duration.uintValue)
 
         case .same:
-            self
+            return self
         }
     }
+}
+
+// MARK: - UIntRepresentable
+
+extension WallTime: UIntRepresentable {
 }

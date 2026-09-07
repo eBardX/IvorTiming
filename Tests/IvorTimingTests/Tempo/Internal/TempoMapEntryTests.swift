@@ -51,6 +51,24 @@ extension TempoMapEntryTests {
     }
 
     @Test
+    func entryID_defaultsToFreshIdentity() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e2 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+
+        #expect(e1.entryID != e2.entryID)
+    }
+
+    @Test
+    func entryID_explicit() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let entryID = TempoMap.EntryID()
+        let entry = TempoMap.Entry(entryID: entryID, beatTime: BeatTime(1), tempo: t120, extras: nil)
+
+        #expect(entry.entryID == entryID)
+    }
+
+    @Test
     func equality() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
@@ -90,24 +108,6 @@ extension TempoMapEntryTests {
 
         #expect(e1 != e2)
         #expect(e1 != e3)
-    }
-
-    @Test
-    func entryID_defaultsToFreshIdentity() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let e2 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-
-        #expect(e1.entryID != e2.entryID)
-    }
-
-    @Test
-    func entryID_explicit() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let entryID = TempoMap.EntryID()
-        let entry = TempoMap.Entry(entryID: entryID, beatTime: BeatTime(1), tempo: t120, extras: nil)
-
-        #expect(entry.entryID == entryID)
     }
 
     @Test

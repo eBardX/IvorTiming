@@ -4,6 +4,7 @@ import Foundation
 @testable import IvorTiming
 import Testing
 import XestiNumbers
+import XestiTools
 
 struct WallDurationTests {
 }
@@ -15,6 +16,11 @@ extension WallDurationTests {
     func adding() {
         #expect(WallDuration(1).adding(WallDuration(2)) == WallDuration(3))
         #expect(WallDuration.zero.adding(.zero) == .zero)
+    }
+
+    @Test
+    func adding_overflow() {
+        #expect(WallDuration(uintValue: .max)?.adding(WallDuration(1)) == nil)
     }
 
     @Test
@@ -38,6 +44,13 @@ extension WallDurationTests {
     }
 
     @Test
+    func formatted() {
+        let plain = WallDuration(1_500).formatted().characters.reduce(into: "") { $0.append($1) }
+
+        #expect(plain == "1.500")
+    }
+
+    @Test
     func hashable() {
         let set: Set<WallDuration> = [WallDuration(1), WallDuration(1), WallDuration(2)]
 
@@ -45,21 +58,9 @@ extension WallDurationTests {
     }
 
     @Test
-    func init_invalid() {
-        #expect(WallDuration(numberValue: -1) == nil)
-    }
-
-    @Test
-    func init_valid() {
-        #expect(WallDuration(numberValue: 0) != nil)
-        #expect(WallDuration(numberValue: 1) != nil)
-    }
-
-    @Test
-    func isValid() {
-        #expect(WallDuration.isValid(Number(0)))
-        #expect(WallDuration.isValid(Number(1)))
-        #expect(!WallDuration.isValid(Number(-1)))
+    func init_uintValue() {
+        #expect(WallDuration(uintValue: 0) != nil)
+        #expect(WallDuration(uintValue: 1) != nil)
     }
 
     @Test
@@ -74,6 +75,24 @@ extension WallDurationTests {
     }
 
     @Test
+    func plain() {
+        #expect(WallDuration(0).plain == "0")
+        #expect(WallDuration(1_000).plain == "1")
+        #expect(WallDuration(1_500).plain == "1.5")
+        #expect(WallDuration(1_050).plain == "1.05")
+        #expect(WallDuration(1_005).plain == "1.005")
+    }
+
+    @Test
+    func plain_roundTrip() {
+        #expect(WallDuration(plain: "1") == WallDuration(1_000))
+        #expect(WallDuration(plain: "1.5") == WallDuration(1_500))
+        #expect(WallDuration(plain: "1.05") == WallDuration(1_050))
+        #expect(WallDuration(plain: "1.005") == WallDuration(1_005))
+        #expect(WallDuration(plain: "not a number") == nil)
+    }
+
+    @Test
     func subtracting() {
         #expect(WallDuration(3).subtracting(WallDuration(1)) == WallDuration(2))
         #expect(WallDuration(1).subtracting(WallDuration(3)) == nil)
@@ -81,7 +100,7 @@ extension WallDurationTests {
 
     @Test
     func zero() throws {
-        let z = try #require(WallDuration(numberValue: 0))
+        let z = try #require(WallDuration(uintValue: 0))
 
         #expect(z == .zero)
         #expect(z.isZero)

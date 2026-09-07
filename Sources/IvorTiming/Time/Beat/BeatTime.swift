@@ -4,7 +4,7 @@ public import XestiNumbers
 public import XestiTools
 
 /// A point in musical beat time, measured in beats from a reference position.
-public struct BeatTime: NumberRepresentable {
+public struct BeatTime {
 
     // MARK: Public Initializers
 
@@ -21,10 +21,27 @@ public struct BeatTime: NumberRepresentable {
         self.numberValue = numberValue
     }
 
+    /// Creates a beat time by parsing its plain string representation, returning `nil` if the
+    /// string cannot be parsed or is out of range.
+    ///
+    /// - Parameter plain:  The plain string representation of the beat time (as produced by
+    ///                     `plain`).
+    public init?(plain: String) {
+        guard let numberValue = Number(plain)
+        else { return nil }
+
+        self.init(numberValue: numberValue)
+    }
+
     // MARK: Public Instance Properties
 
     /// The rational number of beats representing this time.
     public let numberValue: Number
+
+    /// The plain string representation of this beat time.
+    public var plain: String {
+        description
+    }
 }
 
 // MARK: -
@@ -68,6 +85,11 @@ extension BeatTime: InterpolatableKey {
                          through endValue: Self) -> Double {
         (doubleValue - startValue.doubleValue) / (endValue.doubleValue - startValue.doubleValue)
     }
+}
+
+// MARK: - NumberRepresentable
+
+extension BeatTime: NumberRepresentable {
 }
 
 // MARK: - TimeProtocol

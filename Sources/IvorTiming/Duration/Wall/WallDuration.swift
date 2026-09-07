@@ -1,29 +1,47 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
 public import XestiNumbers
+public import XestiTools
 
-/// A non-negative duration of wall-clock time, measured in seconds.
-public struct WallDuration: NumberRepresentable {
+/// A non-negative duration of wall-clock time, measured in milliseconds.
+public struct WallDuration {
 
     // MARK: Public Initializers
 
-    /// Creates a ``WallDuration`` from a rational number value.
+    /// Creates a wall duration by parsing its plain string representation, returning `nil` if the
+    /// string cannot be parsed or is out of range.
     ///
-    /// - Parameter numberValue:    The rational number of seconds.
-    ///
-    /// - Returns:  A new ``WallDuration``, or `nil` if `numberValue` is not
-    ///             a valid wall duration.
-    public init?(numberValue: Number) {
-        guard Self.isValid(numberValue)
+    /// - Parameter plain:  The plain string representation of the wall duration, in seconds (as
+    ///                     produced by `plain`).
+    public init?(plain: String) {
+        guard let milliseconds = parseWallSeconds(plain)
         else { return nil }
 
-        self.numberValue = numberValue
+        self.init(uintValue: milliseconds)
+    }
+
+    /// Creates a ``WallDuration`` from a millisecond count.
+    ///
+    /// - Parameter uintValue:  The number of milliseconds.
+    public init?(uintValue: UInt) {
+        self.uintValue = uintValue
     }
 
     // MARK: Public Instance Properties
 
-    /// The rational number of seconds representing this duration.
-    public let numberValue: Number
+    /// The number of milliseconds representing this duration.
+    public let uintValue: UInt
+
+    /// The number of seconds representing this duration.
+    public var doubleValue: Double {
+        Double(uintValue) / 1_000
+    }
+
+    /// The plain string representation of this wall duration, in seconds, omitting trailing zero
+    /// decimal digits.
+    public var plain: String {
+        formatWallSeconds(uintValue)
+    }
 }
 
 // MARK: -
@@ -35,17 +53,22 @@ extension WallDuration {
     /// The zero wall duration.
     public static let zero = Self(0)
 
-    // MARK: Public Type Methods
+    // MARK: Internal Initializers
 
-    /// Returns a Boolean value indicating whether the given number is a valid
-    /// wall duration.
-    ///
-    /// - Parameter numberValue:    The number to validate.
-    ///
-    /// - Returns:  `true` if `numberValue` is rational and non-negative;
-    ///             otherwise, `false`.
-    public static func isValid(_ numberValue: Number) -> Bool {
-        numberValue.isRational && !numberValue.isNegative
+    // Rounds to the nearest millisecond.
+    internal init(seconds: Double) {
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+    }
+}
+
+// MARK: - CustomStringConvertible
+
+extension WallDuration {
+
+    // MARK: Public Instance Properties
+
+    public var description: String {
+        plain
     }
 }
 
@@ -69,7 +92,9 @@ extension WallDuration: DurationProtocol {
     /// - Returns:  The sum, or `nil` if the result is not a valid wall
     ///             duration.
     public func adding(_ other: Self) -> Self? {
-        Self(numberValue: numberValue + other.numberValue)
+        let (result, overflow) = uintValue.addingReportingOverflow(other.uintValue)
+
+        return overflow ? nil : Self(uintValue: result)
     }
 
     /// Returns this wall duration divided by a factor.
@@ -79,7 +104,10 @@ extension WallDuration: DurationProtocol {
     /// - Returns:  The quotient, or `nil` if the result is not a valid wall
     ///             duration.
     public func divided(by factor: Number) -> Self? {
-        Self(numberValue: numberValue / factor)
+        guard !factor.isZero
+        else { return nil }
+
+        return Self(seconds: doubleValue / factor.doubleValue)
     }
 
     /// Returns this wall duration multiplied by a factor.
@@ -89,7 +117,7 @@ extension WallDuration: DurationProtocol {
     /// - Returns:  The product, or `nil` if the result is not a valid wall
     ///             duration.
     public func multiplied(by factor: Number) -> Self? {
-        Self(numberValue: numberValue * factor)
+        Self(seconds: doubleValue * factor.doubleValue)
     }
 
     /// Returns the result of subtracting another wall duration from this
@@ -100,6 +128,14 @@ extension WallDuration: DurationProtocol {
     /// - Returns:  The difference, or `nil` if the result is not a valid wall
     ///             duration.
     public func subtracting(_ other: Self) -> Self? {
-        Self(numberValue: numberValue - other.numberValue)
+        guard uintValue >= other.uintValue
+        else { return nil }
+
+        return Self(uintValue: uintValue - other.uintValue)
     }
+}
+
+// MARK: - UIntRepresentable
+
+extension WallDuration: UIntRepresentable {
 }

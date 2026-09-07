@@ -2,6 +2,8 @@
 
 public import XestiNumbers
 
+internal import XestiTools
+
 extension WallDuration {
 
     // MARK: Public Type Methods
@@ -14,7 +16,7 @@ extension WallDuration {
     /// - Returns:  The sum of `dur1` and `dur2`.
     public static func + (dur1: Self,
                           dur2: Self) -> Self {
-        WallDuration(dur1.numberValue + dur2.numberValue)
+        WallDuration(dur1.uintValue + dur2.uintValue)
     }
 
     /// Adds a wall duration to another in place.
@@ -34,7 +36,7 @@ extension WallDuration {
     /// - Returns:  The difference of `dur1` and `dur2`.
     public static func - (dur1: Self,
                           dur2: Self) -> Self {
-        WallDuration(dur1.numberValue - dur2.numberValue)
+        WallDuration(dur1.uintValue - dur2.uintValue)
     }
 
     /// Subtracts a wall duration from another in place.
@@ -54,7 +56,7 @@ extension WallDuration {
     /// - Returns:  The product of `dur` and `factor`.
     public static func * (dur: Self,
                           factor: Number) -> Self {
-        WallDuration(dur.numberValue * factor)
+        WallDuration(seconds: dur.doubleValue * factor.doubleValue)
     }
 
     /// Scales this wall duration by a factor in place.

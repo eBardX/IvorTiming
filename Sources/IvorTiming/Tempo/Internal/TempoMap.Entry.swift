@@ -44,6 +44,14 @@ extension TempoMap.Entry {
         }
     }
 
+    internal var entryID: TempoMap.EntryID {
+        switch self {
+        case let .extended(entryID, _, _, _),
+            let .simple(entryID, _, _):
+            entryID
+        }
+    }
+
     internal var extras: Extras? {
         switch self {
         case let .extended(_, _, _, extras):
@@ -51,14 +59,6 @@ extension TempoMap.Entry {
 
         default:
             nil
-        }
-    }
-
-    internal var entryID: TempoMap.EntryID {
-        switch self {
-        case let .extended(entryID, _, _, _),
-            let .simple(entryID, _, _):
-            entryID
         }
     }
 

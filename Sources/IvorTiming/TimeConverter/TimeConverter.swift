@@ -47,15 +47,15 @@ extension TimeConverter {
     /// - Returns:  The ``BeatTime`` corresponding to `wallTime`.
     public func beatTime(at wallTime: WallTime) -> BeatTime {
         guard !entries.isEmpty
-        else { return BeatTime(wallTime.numberValue * (defaultTempo.numberValue / Tempo.default.numberValue)) }
+        else { return BeatTime(Number(wallTime.doubleValue) * (defaultTempo.numberValue / Tempo.default.numberValue)) }
 
         if wallTime < entries[0].wallTime {
-            return BeatTime(wallTime.numberValue * entries[0].tempo.numberValue / Tempo.default.numberValue)
+            return BeatTime(Number(wallTime.doubleValue) * entries[0].tempo.numberValue / Tempo.default.numberValue)
         }
 
         let entry = entries[floorIndex(for: wallTime)]
         let tempoChange = entry.tempoChange
-        let wallFraction = (wallTime - entry.wallTime).numberValue / entry.wallDuration.numberValue
+        let wallFraction = Number((wallTime - entry.wallTime).doubleValue / entry.wallDuration.doubleValue)
 
         if tempoChange < 0 {
             let scale = sqrt(-tempoChange / entry.tempo.numberValue)
@@ -81,10 +81,10 @@ extension TimeConverter {
     /// - Returns:  The ``WallTime`` corresponding to `beatTime`.
     public func wallTime(at beatTime: BeatTime) -> WallTime {
         guard !entries.isEmpty
-        else { return WallTime(beatTime.numberValue * (Tempo.default.numberValue / defaultTempo.numberValue)) }
+        else { return WallTime(seconds: (beatTime.numberValue * (Tempo.default.numberValue / defaultTempo.numberValue)).doubleValue) }
 
         if beatTime < entries[0].beatTime {
-            return WallTime(beatTime.numberValue * Tempo.default.numberValue / entries[0].tempo.numberValue)
+            return WallTime(seconds: (beatTime.numberValue * Tempo.default.numberValue / entries[0].tempo.numberValue).doubleValue)
         }
 
         let entry = entries[floorIndex(for: beatTime)]

@@ -3,7 +3,7 @@
 import Foundation
 @testable import IvorTiming
 import Testing
-import XestiNumbers
+import XestiTools
 
 struct WallDurationFormatStyleTests {
 }
@@ -14,14 +14,14 @@ extension WallDurationFormatStyleTests {
     @Test
     func format() {
         let style = WallDuration.FormatStyle(locale: Locale(identifier: "en_US"))
-        let plain = style.format(WallDuration(4)).characters.reduce(into: "") { $0.append($1) }
+        let plain = style.format(WallDuration(4_000)).characters.reduce(into: "") { $0.append($1) }
 
-        #expect(plain == "4")
+        #expect(plain == "4.000")
     }
 
     @Test
     func formatted() {
-        #expect(!WallDuration(4).formatted().characters.isEmpty)
+        #expect(!WallDuration(4_000).formatted().characters.isEmpty)
     }
 
     @Test

@@ -2,6 +2,8 @@
 
 public import XestiNumbers
 
+internal import XestiTools
+
 extension WallTime {
 
     // MARK: Public Type Methods
@@ -14,7 +16,7 @@ extension WallTime {
     /// - Returns:  The wall time `dur` seconds after `time`.
     public static func + (time: Self,
                           dur: WallDuration) -> Self {
-        WallTime(time.numberValue + dur.numberValue)
+        WallTime(time.uintValue + dur.uintValue)
     }
 
     /// Advances a wall time by a duration in place.
@@ -34,7 +36,7 @@ extension WallTime {
     /// - Returns:  The wall time `dur` seconds before `time`.
     public static func - (time: Self,
                           dur: WallDuration) -> Self {
-        WallTime(time.numberValue - dur.numberValue)
+        WallTime(time.uintValue - dur.uintValue)
     }
 
     /// Retreats a wall time by a duration in place.
@@ -54,7 +56,7 @@ extension WallTime {
     /// - Returns:  The wall duration from `time2` to `time1`.
     public static func - (time1: Self,
                           time2: Self) -> WallDuration {
-        WallDuration(time1.numberValue - time2.numberValue)
+        WallDuration(time1.uintValue - time2.uintValue)
     }
 
     /// Returns a wall time scaled by a factor.
@@ -65,7 +67,7 @@ extension WallTime {
     /// - Returns:  The product of `time` and `factor`.
     public static func * (time: Self,
                           factor: Number) -> Self {
-        WallTime(time.numberValue * factor)
+        WallTime(seconds: time.doubleValue * factor.doubleValue)
     }
 
     /// Scales a wall time by a factor in place.

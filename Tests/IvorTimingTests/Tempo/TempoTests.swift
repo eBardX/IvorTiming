@@ -76,4 +76,17 @@ extension TempoTests {
 
         #expect(t120.numberValue == 120)
     }
+
+    @Test
+    func plain() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+
+        #expect(t120.plain == "120")
+    }
+
+    @Test
+    func plain_roundTrip() {
+        #expect(Tempo(plain: "120") == Tempo(uintValue: 120))
+        #expect(Tempo(plain: "not a number") == nil)
+    }
 }

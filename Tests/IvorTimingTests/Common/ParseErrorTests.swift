@@ -16,6 +16,16 @@ extension ParseErrorTests {
     }
 
     @Test
+    func equality() {
+        #expect(ParseError.invalidTimeBasis("foo") == .invalidTimeBasis("foo"))
+    }
+
+    @Test
+    func inequality() {
+        #expect(ParseError.invalidTimeBasis("foo") != .invalidTimeBasis("bar"))
+    }
+
+    @Test
     func message_invalidTimeBasis() {
         #expect(ParseError.invalidTimeBasis("foo").message == "Invalid time basis: \u{2018}foo\u{2019}")
     }

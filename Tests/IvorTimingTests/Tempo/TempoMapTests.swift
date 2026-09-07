@@ -106,6 +106,32 @@ extension TempoMapTests {
     }
 
     @Test
+    func hasExtras() throws {
+        let t120   = try #require(Tempo(uintValue: 120))
+        let extras = Extras(elements: [Extra(name: "tag")])
+        var with = TempoMap()
+        var without = TempoMap()
+
+        with.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
+        without.insert(beatTime: BeatTime(1), tempo: t120)
+
+        #expect(with.hasExtras)
+        #expect(!without.hasExtras)
+    }
+
+    @Test
+    func hasExtras_updatedOnRemove() throws {
+        let t120   = try #require(Tempo(uintValue: 120))
+        let extras = Extras(elements: [Extra(name: "tag")])
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
+        tmap.remove(beatTime: BeatTime(1), tempo: t120, extras: extras)
+
+        #expect(!tmap.hasExtras)
+    }
+
+    @Test
     func insert_duplicate() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         var tmap = TempoMap()
@@ -130,32 +156,6 @@ extension TempoMapTests {
         #expect(first.inserted)
         #expect(second.inserted)
         #expect(second.entryID != first.entryID)
-    }
-
-    @Test
-    func hasExtras() throws {
-        let t120   = try #require(Tempo(uintValue: 120))
-        let extras = Extras(elements: [Extra(name: "tag")])
-        var with = TempoMap()
-        var without = TempoMap()
-
-        with.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
-        without.insert(beatTime: BeatTime(1), tempo: t120)
-
-        #expect(with.hasExtras)
-        #expect(!without.hasExtras)
-    }
-
-    @Test
-    func hasExtras_updatedOnRemove() throws {
-        let t120   = try #require(Tempo(uintValue: 120))
-        let extras = Extras(elements: [Extra(name: "tag")])
-        var tmap = TempoMap()
-
-        tmap.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
-        tmap.remove(beatTime: BeatTime(1), tempo: t120, extras: extras)
-
-        #expect(!tmap.hasExtras)
     }
 
     @Test
@@ -252,32 +252,6 @@ extension TempoMapTests {
     }
 
     @Test
-    func remove_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        var tmap = TempoMap()
-
-        let inserted = tmap.insert(beatTime: BeatTime(1), tempo: t120)
-        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t120)
-
-        #expect(removedID == inserted.entryID)
-        #expect(tmap.isEmpty)
-    }
-
-    @Test
-    func remove_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
-        var tmap = TempoMap()
-
-        tmap.insert(beatTime: BeatTime(1), tempo: t120)
-
-        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t90)
-
-        #expect(removedID == nil)
-        #expect(!tmap.isEmpty)
-    }
-
-    @Test
     func remove_entryID_found() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         var tmap = TempoMap()
@@ -306,6 +280,32 @@ extension TempoMapTests {
         let removed = tmap.remove(entryID: TempoMap.EntryID())
 
         #expect(!removed)
+        #expect(!tmap.isEmpty)
+    }
+
+    @Test
+    func remove_found() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        let inserted = tmap.insert(beatTime: BeatTime(1), tempo: t120)
+        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t120)
+
+        #expect(removedID == inserted.entryID)
+        #expect(tmap.isEmpty)
+    }
+
+    @Test
+    func remove_notFound() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(1), tempo: t120)
+
+        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t90)
+
+        #expect(removedID == nil)
         #expect(!tmap.isEmpty)
     }
 

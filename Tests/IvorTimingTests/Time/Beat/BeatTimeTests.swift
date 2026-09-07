@@ -102,6 +102,19 @@ extension BeatTimeTests {
     }
 
     @Test
+    func plain() {
+        #expect(BeatTime(4).plain == "4")
+        #expect(BeatTime(Number(3) / Number(4)).plain == "3/4")
+    }
+
+    @Test
+    func plain_roundTrip() {
+        #expect(BeatTime(plain: "4") == BeatTime(4))
+        #expect(BeatTime(plain: "3/4") == BeatTime(Number(3) / Number(4)))
+        #expect(BeatTime(plain: "not a number") == nil)
+    }
+
+    @Test
     func zero() throws {
         let z = try #require(BeatTime(numberValue: 0))
 

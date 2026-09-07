@@ -12,25 +12,8 @@ struct TempoMapInternalTests {
 
 extension TempoMapInternalTests {
     @Test
-    func firstIndex_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        var tmap = TempoMap()
-
-        tmap.insert(beatTime: BeatTime(1), tempo: t120)
-
-        #expect(tmap.firstIndex(beatTime: BeatTime(1), tempo: t120, extras: nil) == 0)
-    }
-
-    @Test
-    func firstIndex_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        var tmap = TempoMap()
-
-        tmap.insert(beatTime: BeatTime(1), tempo: t120)
-
-        let index = tmap.firstIndex(beatTime: BeatTime(2), tempo: t120, extras: nil)
-
-        #expect(index == nil)
+    func deduplicated_empty() {
+        #expect(TempoMap.deduplicated([]).isEmpty)
     }
 
     @Test
@@ -45,11 +28,6 @@ extension TempoMapInternalTests {
         #expect(result.count == 2)
         #expect(result[0].entryID == first.entryID)
         #expect(result[1].entryID == distinct.entryID)
-    }
-
-    @Test
-    func deduplicated_empty() {
-        #expect(TempoMap.deduplicated([]).isEmpty)
     }
 
     @Test
@@ -72,6 +50,28 @@ extension TempoMapInternalTests {
         let position = tmap.firstIndex(entryID: TempoMap.EntryID())
 
         #expect(position == nil)
+    }
+
+    @Test
+    func firstIndex_found() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(1), tempo: t120)
+
+        #expect(tmap.firstIndex(beatTime: BeatTime(1), tempo: t120, extras: nil) == 0)
+    }
+
+    @Test
+    func firstIndex_notFound() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(1), tempo: t120)
+
+        let index = tmap.firstIndex(beatTime: BeatTime(2), tempo: t120, extras: nil)
+
+        #expect(index == nil)
     }
 
     @Test

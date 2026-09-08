@@ -44,6 +44,21 @@ public protocol TimeProtocol<DurationType>: Codable,
 
 extension TimeProtocol {
 
+    // MARK: Public Instance Properties
+
+    public var plain: String {
+        switch self {
+        case let value as BeatTime:
+            value.plain
+
+        case let value as WallTime:
+            value.plain
+
+        default:
+            "\(self)"
+        }
+    }
+
     // MARK: Public Instance Methods
 
     /// Returns an attributed string representation of this time using the

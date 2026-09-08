@@ -3,6 +3,8 @@
 public import XestiNumbers
 public import XestiTools
 
+private import Foundation
+
 /// A tempo in beats per minute, represented as a positive unsigned integer.
 public struct Tempo {
 
@@ -13,10 +15,13 @@ public struct Tempo {
     ///
     /// - Parameter plain:  The plain string representation of the tempo (as produced by `plain`).
     public init?(plain: String) {
-        guard let uintValue = UInt(plain)
+        guard let numberValue = try? Self.plainParseStrategy.parse(plain),
+              numberValue.isExact,
+              numberValue.isInteger,
+              !numberValue.isNegative
         else { return nil }
 
-        self.init(uintValue: uintValue)
+        self.init(uintValue: numberValue.uintValue)
     }
 
     /// Creates a ``Tempo`` from an unsigned integer value.
@@ -35,11 +40,6 @@ public struct Tempo {
 
     /// The tempo expressed as a beats-per-minute unsigned integer.
     public let uintValue: UInt
-
-    /// The plain string representation of this tempo.
-    public var plain: String {
-        description
-    }
 }
 
 // MARK: -
@@ -73,6 +73,22 @@ extension Tempo {
     public var numberValue: Number {
         Number(uintValue)
     }
+
+    /// The plain string representation of this tempo.
+    public var plain: String {
+        Self.plainFormatStyle.format(numberValue)
+    }
+
+    // MARK: Private Type Properties
+
+    private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
+        .decimalPrecision(0)
+        .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
+        .grouping(false)
+
+    private static let plainLocale = Locale(identifier: "en_US_POSIX")
+
+    private static let plainParseStrategy = plainFormatStyle.parseStrategy
 }
 
 // MARK: - UIntRepresentable

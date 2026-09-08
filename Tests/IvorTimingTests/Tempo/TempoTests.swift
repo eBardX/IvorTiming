@@ -87,6 +87,11 @@ extension TempoTests {
     @Test
     func plain_roundTrip() {
         #expect(Tempo(plain: "120") == Tempo(uintValue: 120))
+        #expect(Tempo(plain: "1") == Tempo(uintValue: 1))
+        #expect(Tempo(plain: "0") == nil)
+        #expect(Tempo(plain: "-1") == nil)
+        #expect(Tempo(plain: "120.5") == nil)
+        #expect(Tempo(plain: "") == nil)
         #expect(Tempo(plain: "not a number") == nil)
     }
 }

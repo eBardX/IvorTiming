@@ -98,8 +98,8 @@ extension WallTimeTests {
 
     @Test
     func plain() {
-        #expect(WallTime(0).plain == "0")
-        #expect(WallTime(1_000).plain == "1")
+        #expect(WallTime(0).plain == "0.")
+        #expect(WallTime(1_000).plain == "1.")
         #expect(WallTime(1_500).plain == "1.5")
         #expect(WallTime(1_050).plain == "1.05")
         #expect(WallTime(1_005).plain == "1.005")

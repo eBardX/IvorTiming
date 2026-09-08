@@ -3,6 +3,8 @@
 public import XestiNumbers
 public import XestiTools
 
+private import Foundation
+
 /// A point in musical beat time, measured in beats from a reference position.
 public struct BeatTime {
 
@@ -27,7 +29,7 @@ public struct BeatTime {
     /// - Parameter plain:  The plain string representation of the beat time (as produced by
     ///                     `plain`).
     public init?(plain: String) {
-        guard let numberValue = Number(plain)
+        guard let numberValue = try? Self.plainParseStrategy.parse(plain)
         else { return nil }
 
         self.init(numberValue: numberValue)
@@ -37,11 +39,6 @@ public struct BeatTime {
 
     /// The rational number of beats representing this time.
     public let numberValue: Number
-
-    /// The plain string representation of this beat time.
-    public var plain: String {
-        description
-    }
 }
 
 // MARK: -
@@ -65,6 +62,24 @@ extension BeatTime {
     public static func isValid(_ numberValue: Number) -> Bool {
         numberValue.isRational && !numberValue.isNegative
     }
+
+    // MARK: Public Instance Properties
+
+    /// The plain string representation of this beat time.
+    public var plain: String {
+        Self.plainFormatStyle.format(numberValue)
+    }
+
+    // MARK: Private Type Properties
+
+    private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
+        .decimalPrecision(0...3)
+        .fractionDisplay(strategy: .mixed(alwaysShowInteger: true))
+        .grouping(false)
+
+    private static let plainLocale = Locale(identifier: "en_US_POSIX")
+
+    private static let plainParseStrategy = plainFormatStyle.parseStrategy
 }
 
 // MARK: - InterpolatableKey

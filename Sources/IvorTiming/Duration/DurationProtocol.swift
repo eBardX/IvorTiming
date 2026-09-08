@@ -58,6 +58,21 @@ public protocol DurationProtocol: Codable,
 
 extension DurationProtocol {
 
+    // MARK: Public Instance Properties
+
+    public var plain: String {
+        switch self {
+        case let value as BeatDuration:
+            value.plain
+
+        case let value as WallDuration:
+            value.plain
+
+        default:
+            "\(self)"
+        }
+    }
+
     // MARK: Public Instance Methods
 
     /// Returns an attributed string representation of this duration using the

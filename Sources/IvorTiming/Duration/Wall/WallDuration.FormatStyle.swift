@@ -2,6 +2,8 @@
 
 public import Foundation
 
+private import XestiNumbers
+
 extension WallDuration {
 
     // MARK: Public Nested Types
@@ -17,8 +19,9 @@ extension WallDuration {
         /// - Parameter locale:  The locale to use for formatting. Defaults to
         ///                      `.autoupdatingCurrent`.
         public init(locale: Locale = .autoupdatingCurrent) {
-            self.baseStyle = FloatingPointFormatStyle<Double>(locale: locale)
-                .precision(.fractionLength(3...3))
+            self.baseStyle = Number.FormatStyle(locale: locale)
+                .decimalPrecision(3)
+                .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
                 .attributed
             self.locale = locale
         }
@@ -30,7 +33,7 @@ extension WallDuration {
 
         // MARK: Private Instance Properties
 
-        private let baseStyle: FloatingPointFormatStyle<Double>.Attributed
+        private let baseStyle: Number.FormatStyle.Attributed
     }
 }
 
@@ -46,7 +49,7 @@ extension WallDuration.FormatStyle: FormatStyle {
     ///
     /// - Returns:  An attributed string representation of `value`.
     public func format(_ value: WallDuration) -> AttributedString {
-        baseStyle.format(value.doubleValue)
+        baseStyle.format(value.numberValue)
     }
 }
 

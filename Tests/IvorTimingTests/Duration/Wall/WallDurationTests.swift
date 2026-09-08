@@ -76,8 +76,8 @@ extension WallDurationTests {
 
     @Test
     func plain() {
-        #expect(WallDuration(0).plain == "0")
-        #expect(WallDuration(1_000).plain == "1")
+        #expect(WallDuration(0).plain == "0.")
+        #expect(WallDuration(1_000).plain == "1.")
         #expect(WallDuration(1_500).plain == "1.5")
         #expect(WallDuration(1_050).plain == "1.05")
         #expect(WallDuration(1_005).plain == "1.005")

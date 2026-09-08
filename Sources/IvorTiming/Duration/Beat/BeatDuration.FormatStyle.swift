@@ -21,7 +21,7 @@ extension BeatDuration {
         public init(locale: Locale = .autoupdatingCurrent) {
             self.baseStyle = Number.FormatStyle(locale: locale)
                 .decimalPrecision(0...3)
-                .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
+                .fractionDisplay(strategy: .mixed(alwaysShowInteger: false))
                 .attributed
             self.locale = locale
         }

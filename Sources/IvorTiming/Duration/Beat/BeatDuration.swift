@@ -2,6 +2,8 @@
 
 public import XestiNumbers
 
+private import Foundation
+
 /// A non-negative duration measured in musical beats.
 public struct BeatDuration {
 
@@ -26,7 +28,7 @@ public struct BeatDuration {
     /// - Parameter plain:  The plain string representation of the beat duration (as produced by
     ///                     `plain`).
     public init?(plain: String) {
-        guard let numberValue = Number(plain)
+        guard let numberValue = try? Self.plainParseStrategy.parse(plain)
         else { return nil }
 
         self.init(numberValue: numberValue)
@@ -36,11 +38,6 @@ public struct BeatDuration {
 
     /// The rational number of beats representing this duration.
     public let numberValue: Number
-
-    /// The plain string representation of this beat duration.
-    public var plain: String {
-        description
-    }
 }
 
 // MARK: -
@@ -64,6 +61,24 @@ extension BeatDuration {
     public static func isValid(_ numberValue: Number) -> Bool {
         numberValue.isRational && !numberValue.isNegative
     }
+
+    // MARK: Public Instance Properties
+
+    /// The plain string representation of this beat duration.
+    public var plain: String {
+        Self.plainFormatStyle.format(numberValue)
+    }
+
+    // MARK: Private Type Properties
+
+    private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
+        .decimalPrecision(0...3)
+        .fractionDisplay(strategy: .mixed(alwaysShowInteger: false))
+        .grouping(false)
+
+    private static let plainLocale = Locale(identifier: "en_US_POSIX")
+
+    private static let plainParseStrategy = plainFormatStyle.parseStrategy
 }
 
 // MARK: - DurationProtocol

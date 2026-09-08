@@ -1,6 +1,9 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
+public import XestiNumbers
 public import XestiTools
+
+private import Foundation
 
 /// A point in wall-clock time, measured in milliseconds from a reference epoch.
 public struct WallTime {
@@ -13,10 +16,10 @@ public struct WallTime {
     /// - Parameter plain:  The plain string representation of the wall time, in seconds (as
     ///                     produced by `plain`).
     public init?(plain: String) {
-        guard let milliseconds = parseWallSeconds(plain)
+        guard let numberValue = try? Self.plainParseStrategy.parse(plain)
         else { return nil }
 
-        self.init(uintValue: milliseconds)
+        self.init(seconds: numberValue.doubleValue)
     }
 
     /// Creates a ``WallTime`` from a millisecond count.
@@ -30,17 +33,6 @@ public struct WallTime {
 
     /// The number of milliseconds since the reference epoch representing this time.
     public let uintValue: UInt
-
-    /// The number of seconds since the reference epoch representing this time.
-    public var doubleValue: Double {
-        Double(uintValue) / 1_000
-    }
-
-    /// The plain string representation of this wall time, in seconds, omitting trailing zero
-    /// decimal digits.
-    public var plain: String {
-        formatWallSeconds(uintValue)
-    }
 }
 
 // MARK: -
@@ -52,12 +44,40 @@ extension WallTime {
     /// The zero wall time.
     public static let zero = Self(0)
 
+    // MARK: Public Instance Properties
+
+    /// The number of seconds since the reference epoch representing this time.
+    public var doubleValue: Double {
+        Double(uintValue) / 1_000
+    }
+
+    public var numberValue: Number {
+        Number(Double(uintValue) / 1_000)
+    }
+
+    /// The plain string representation of this wall time, in seconds, omitting trailing zero
+    /// decimal digits.
+    public var plain: String {
+        Self.plainFormatStyle.format(numberValue)
+    }
+
     // MARK: Internal Initializers
 
     // Rounds to the nearest millisecond.
     internal init(seconds: Double) {
         self.init(uintValue: UInt((max(seconds, 0) * 1_000).rounded()))!    // swiftlint:disable:this force_unwrapping
     }
+
+    // MARK: Private Type Properties
+
+    private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
+        .decimalPrecision(0...3)
+        .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
+        .grouping(false)
+
+    private static let plainLocale = Locale(identifier: "en_US_POSIX")
+
+    private static let plainParseStrategy = plainFormatStyle.parseStrategy
 }
 
 // MARK: - CustomStringConvertible

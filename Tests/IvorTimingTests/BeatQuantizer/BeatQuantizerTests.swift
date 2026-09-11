@@ -29,6 +29,15 @@ extension BeatQuantizerTests {
     }
 
     @Test
+    func gridUnit() throws {
+        let q4 = try BeatQuantizer(factors: [4])
+        let q43 = try BeatQuantizer(factors: [4, 3])
+
+        #expect(q4.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 4))!) // swiftlint:disable:this force_unwrapping
+        #expect(q43.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 12))!) // swiftlint:disable:this force_unwrapping
+    }
+
+    @Test
     func quantize_alreadyOnGrid() throws {
         let q = try BeatQuantizer(factors: [4])
 

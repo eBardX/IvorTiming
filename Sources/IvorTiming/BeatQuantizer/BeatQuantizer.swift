@@ -34,6 +34,14 @@ public struct BeatQuantizer {
 
 extension BeatQuantizer {
 
+    // MARK: Public Instance Properties
+
+    /// The finest grid subdivision this quantizer snaps to, as a beat duration (`1/lcmFactor`
+    /// beats).
+    public var gridUnit: BeatDuration {
+        BeatDuration(1 / lcmFactor)
+    }
+
     // MARK: Public Instance Methods
 
     /// Returns the beat time nearest to `beatTime` on the quantization grid.

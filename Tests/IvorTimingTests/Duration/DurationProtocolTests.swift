@@ -25,4 +25,18 @@ extension DurationProtocolTests {
 
         #expect(!duration.formatted().characters.isEmpty)
     }
+
+    @Test
+    func plain_beatDuration() {
+        let duration: any DurationProtocol = BeatDuration(4)
+
+        #expect(duration.plain == "4")
+    }
+
+    @Test
+    func plain_wallDuration() {
+        let duration: any DurationProtocol = WallDuration(4_000)
+
+        #expect(duration.plain == "4.")
+    }
 }

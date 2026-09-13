@@ -11,6 +11,15 @@ struct BeatQuantizerTests {
 
 extension BeatQuantizerTests {
     @Test
+    func gridUnit() throws {
+        let q4 = try BeatQuantizer(factors: [4])
+        let q43 = try BeatQuantizer(factors: [4, 3])
+
+        #expect(q4.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 4))!) // swiftlint:disable:this force_unwrapping
+        #expect(q43.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 12))!) // swiftlint:disable:this force_unwrapping
+    }
+
+    @Test
     func init_emptyFactors() {
         #expect(throws: BeatQuantizer.Error.self) { try BeatQuantizer(factors: []) }
     }
@@ -26,15 +35,6 @@ extension BeatQuantizerTests {
     func init_validFactors() throws {
         _ = try BeatQuantizer(factors: [1])
         _ = try BeatQuantizer(factors: [2, 3, 4])
-    }
-
-    @Test
-    func gridUnit() throws {
-        let q4 = try BeatQuantizer(factors: [4])
-        let q43 = try BeatQuantizer(factors: [4, 3])
-
-        #expect(q4.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 4))!) // swiftlint:disable:this force_unwrapping
-        #expect(q43.gridUnit == BeatDuration(numberValue: Number(numerator: 1, denominator: 12))!) // swiftlint:disable:this force_unwrapping
     }
 
     @Test

@@ -46,6 +46,7 @@ extension TimeProtocol {
 
     // MARK: Public Instance Properties
 
+    /// The plain string representation of this time.
     public var plain: String {
         switch self {
         case let value as BeatTime:

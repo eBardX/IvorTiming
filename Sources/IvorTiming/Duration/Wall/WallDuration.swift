@@ -51,6 +51,7 @@ extension WallDuration {
         Double(uintValue) / 1_000
     }
 
+    /// The number of seconds representing this duration, as a `Number`.
     public var numberValue: Number {
         Number(Double(uintValue) / 1_000)
     }

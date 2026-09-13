@@ -11,8 +11,8 @@ extension TempoMap {
     /// - Parameter factor:     A rational number ≥ 1 by which to stretch the selected entry beat
     ///                         times.
     /// - Parameter anchor:     The low beat-time bound to stretch beat times relative to. `nil`
-    ///                         resolves to the map's own range, or — when `entryIDs` is non-`nil`
-    ///                         — the selected entries' own range.
+    ///                         resolves to the map’s own range, or — when `entryIDs` is non-`nil`
+    ///                         — the selected entries’ own range.
     /// - Parameter entryIDs:   The identities of the entries to augment, or `nil` to augment every
     ///                         entry in the map.
     ///
@@ -60,8 +60,8 @@ extension TempoMap {
     /// - Parameter factor:     A rational number ≥ 1 by which to compress the selected entry beat
     ///                         times.
     /// - Parameter anchor:     The low beat-time bound to compress beat times relative to. `nil`
-    ///                         resolves to the map's own range, or — when `entryIDs` is non-`nil`
-    ///                         — the selected entries' own range.
+    ///                         resolves to the map’s own range, or — when `entryIDs` is non-`nil`
+    ///                         — the selected entries’ own range.
     /// - Parameter entryIDs:   The identities of the entries to diminish, or `nil` to diminish
     ///                         every entry in the map.
     ///
@@ -134,11 +134,39 @@ extension TempoMap {
         entries.sort()
     }
 
+    /// Quantizes entry beat times to the nearest grid point defined by `quantizer`.
+    ///
+    /// Unlike `augment`/`diminish`/`move`/`reverse`, this never throws — an already-built
+    /// ``BeatQuantizer`` has already had its factors validated, so there is nothing left for
+    /// this call to fail on, and snapping an entry to a grid point can never overflow the way a
+    /// relative move can.
+    ///
+    /// - Parameter quantizer:   The quantizer whose grid to snap entry beat times to.
+    /// - Parameter entryIDs:    The identities of the entries to quantize, or `nil` to quantize
+    ///                          every entry in the map.
+    public mutating func quantize(using quantizer: BeatQuantizer,
+                                  entryIDs: Set<EntryID>? = nil) {
+        guard !entries.isEmpty
+        else { return }
+
+        for (idx, entry) in entries.enumerated() {
+            guard entryIDs?.contains(entry.entryID) ?? true
+            else { continue }
+
+            entries[idx] = Entry(entryID: entry.entryID,
+                                 beatTime: quantizer.quantize(entry.beatTime),
+                                 tempo: entry.tempo,
+                                 extras: entry.extras)
+        }
+
+        entries.sort()
+    }
+
     /// Reverses the order of entries within a beat-time range.
     ///
     /// - Parameter beatTimeRange:   The beat-time range to mirror entry beat times around. `nil`
-    ///                              resolves to the map's own beat-time range, or — when
-    ///                              `entryIDs` is non-`nil` — the selected entries' own range.
+    ///                              resolves to the map’s own beat-time range, or — when
+    ///                              `entryIDs` is non-`nil` — the selected entries’ own range.
     /// - Parameter entryIDs:        The identities of the entries to reverse, or `nil` to reverse
     ///                              every entry in the map.
     ///
@@ -177,7 +205,7 @@ extension TempoMap {
     // MARK: Private Instance Methods
 
     //
-    // `nil` resolves to `containing` (the selected entries' own range) — safe by construction,
+    // `nil` resolves to `containing` (the selected entries’ own range) — safe by construction,
     // since it's derived from the very entries being operated on. A caller-supplied anchor must be
     // no later than that range's low bound, or the stretch it pivots would be applied against
     // entries it doesn't actually bound.

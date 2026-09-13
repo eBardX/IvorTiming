@@ -110,6 +110,27 @@ extension TimeConverterTests {
     }
 
     @Test
+    func wallTime_decreasingTempo_isMonotone() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t60  = try #require(Tempo(uintValue: 60))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: t120)
+        tmap.insert(beatTime: BeatTime(4), tempo: t60)
+
+        let tconv = TimeConverter(tempoMap: tmap)
+
+        let wt1 = tconv.wallTime(at: BeatTime(1))
+        let wt2 = tconv.wallTime(at: BeatTime(2))
+        let wt3 = tconv.wallTime(at: BeatTime(3))
+
+        #expect(wt1 < wt2)
+        #expect(wt2 < wt3)
+        #expect(tconv.beatTime(at: wt1) < tconv.beatTime(at: wt2))
+        #expect(tconv.beatTime(at: wt2) < tconv.beatTime(at: wt3))
+    }
+
+    @Test
     func wallTime_varyingTempo_isMonotone() throws {
         let t60  = try #require(Tempo(uintValue: 60))
         let t120 = try #require(Tempo(uintValue: 120))

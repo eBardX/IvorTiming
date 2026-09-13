@@ -57,11 +57,47 @@ extension TimeConverterInternalTests {
     }
 
     @Test
+    func updateDerivedProperties_decreasingTempo() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t60  = try #require(Tempo(uintValue: 60))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: t120)
+        tmap.insert(beatTime: BeatTime(4), tempo: t60)
+
+        var tconv = TimeConverter(tempoMap: tmap)
+
+        tconv.updateDerivedProperties()
+
+        #expect(tconv.entries[0].tempoChange == -60)
+        #expect(tconv.entries[0].wallDuration == WallDuration(2_493))
+        #expect(tconv.entries[1].wallTime == WallTime(2_493))
+    }
+
+    @Test
     func updateDerivedProperties_emptyEntries() {
         var tconv = TimeConverter(tempoMap: TempoMap())
 
         tconv.updateDerivedProperties()
 
         #expect(tconv.entries.isEmpty)
+    }
+
+    @Test
+    func updateDerivedProperties_increasingTempo() throws {
+        let t60  = try #require(Tempo(uintValue: 60))
+        let t120 = try #require(Tempo(uintValue: 120))
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: t60)
+        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+
+        var tconv = TimeConverter(tempoMap: tmap)
+
+        tconv.updateDerivedProperties()
+
+        #expect(tconv.entries[0].tempoChange == 60)
+        #expect(tconv.entries[0].wallDuration == WallDuration(3_142))
+        #expect(tconv.entries[1].wallTime == WallTime(3_142))
     }
 }

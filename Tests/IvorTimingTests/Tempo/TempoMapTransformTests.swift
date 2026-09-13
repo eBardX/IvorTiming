@@ -11,130 +11,6 @@ struct TempoMapTransformTests {
 
 extension TempoMapTransformTests {
     @Test
-    func augment_invalidFactor() {
-        var map = TempoMap()
-
-        #expect(throws: TempoMap.Error.self) {
-            try map.augment(by: Number(0))
-        }
-    }
-
-    @Test
-    func augment_scalesBeatTimes() throws {
-        var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
-
-        map.insert(beatTime: 1, tempo: t120)
-        map.insert(beatTime: 3, tempo: t140)
-
-        try map.augment(by: Number(2))
-
-        var beatTimes: [BeatTime] = []
-
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
-        }
-
-        #expect(beatTimes.sorted() == [1, 5])
-    }
-
-    @Test
-    func diminish_invalidFactor() {
-        var map = TempoMap()
-
-        #expect(throws: TempoMap.Error.self) {
-            try map.diminish(by: Number(0))
-        }
-    }
-
-    @Test
-    func diminish_scalesBeatTimes() throws {
-        var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
-
-        map.insert(beatTime: 2, tempo: t120)
-        map.insert(beatTime: 6, tempo: t140)
-
-        try map.diminish(by: Number(2))
-
-        var beatTimes: [BeatTime] = []
-
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
-        }
-
-        #expect(beatTimes.sorted() == [2, 4])
-    }
-
-    @Test
-    func move_shiftsBeatTimes() throws {
-        var map = TempoMap()
-
-        map.insert(beatTime: 0, tempo: .default)
-
-        let directedDuration = try #require(BeatTime(0).duration(to: 2))
-
-        try map.move(by: directedDuration)
-
-        var beatTimes: [BeatTime] = []
-
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
-        }
-
-        #expect(beatTimes == [2])
-    }
-
-    @Test
-    func reverse_mirrorsBeatTimes() throws {
-        var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-
-        map.insert(beatTime: 0, tempo: .default)
-        map.insert(beatTime: 2, tempo: t120)
-
-        try map.reverse()
-
-        var beatTimes: [BeatTime] = []
-
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
-        }
-
-        #expect(beatTimes.sorted() == [0, 2])
-    }
-
-    @Test
-    func augment_invalidAnchorThrows() {
-        var map = TempoMap()
-
-        map.insert(beatTime: 2, tempo: .default)
-
-        #expect(throws: TempoMap.Error.invalidAnchor) {
-            try map.augment(by: Number(2), anchor: 3)
-        }
-    }
-
-    @Test
-    func augment_validAnchorDoesNotThrow() throws {
-        var map = TempoMap()
-
-        map.insert(beatTime: 2, tempo: .default)
-
-        try map.augment(by: Number(2), anchor: 2)
-
-        var beatTimes: [BeatTime] = []
-
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
-        }
-
-        #expect(beatTimes == [2])
-    }
-
-    @Test
     func augment_entryIDsRestrictsAffectedEntries() throws {
         var map = TempoMap()
         let t120 = try #require(Tempo(uintValue: 120))
@@ -152,6 +28,26 @@ extension TempoMapTransformTests {
         }
 
         #expect(beatTimes.sorted() == [0, 4])
+    }
+
+    @Test
+    func augment_invalidAnchorThrows() {
+        var map = TempoMap()
+
+        map.insert(beatTime: 2, tempo: .default)
+
+        #expect(throws: TempoMap.Error.invalidAnchor) {
+            try map.augment(by: Number(2), anchor: 3)
+        }
+    }
+
+    @Test
+    func augment_invalidFactor() {
+        var map = TempoMap()
+
+        #expect(throws: TempoMap.Error.self) {
+            try map.augment(by: Number(0))
+        }
     }
 
     @Test
@@ -190,27 +86,15 @@ extension TempoMapTransformTests {
     }
 
     @Test
-    func reverse_invalidAnchorThrows() throws {
+    func augment_scalesBeatTimes() throws {
         var map = TempoMap()
         let t120 = try #require(Tempo(uintValue: 120))
+        let t140 = try #require(Tempo(uintValue: 140))
 
-        map.insert(beatTime: 0, tempo: .default)
-        map.insert(beatTime: 2, tempo: t120)
+        map.insert(beatTime: 1, tempo: t120)
+        map.insert(beatTime: 3, tempo: t140)
 
-        #expect(throws: TempoMap.Error.invalidAnchor) {
-            try map.reverse(within: BeatTime(1)...3)
-        }
-    }
-
-    @Test
-    func reverse_validAnchorDoesNotThrow() throws {
-        var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-
-        map.insert(beatTime: 0, tempo: .default)
-        map.insert(beatTime: 2, tempo: t120)
-
-        try map.reverse(within: BeatTime(0)...2)
+        try map.augment(by: Number(2))
 
         var beatTimes: [BeatTime] = []
 
@@ -218,7 +102,139 @@ extension TempoMapTransformTests {
             beatTimes.append(beatTime)
         }
 
-        #expect(beatTimes.sorted() == [0, 2])
+        #expect(beatTimes.sorted() == [1, 5])
+    }
+
+    @Test
+    func augment_validAnchorDoesNotThrow() throws {
+        var map = TempoMap()
+
+        map.insert(beatTime: 2, tempo: .default)
+
+        try map.augment(by: Number(2), anchor: 2)
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes == [2])
+    }
+
+    @Test
+    func diminish_invalidFactor() {
+        var map = TempoMap()
+
+        #expect(throws: TempoMap.Error.self) {
+            try map.diminish(by: Number(0))
+        }
+    }
+
+    @Test
+    func diminish_scalesBeatTimes() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t140 = try #require(Tempo(uintValue: 140))
+
+        map.insert(beatTime: 2, tempo: t120)
+        map.insert(beatTime: 6, tempo: t140)
+
+        try map.diminish(by: Number(2))
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes.sorted() == [2, 4])
+    }
+
+    @Test
+    func move_entryIDsRestrictsAffectedEntries() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
+
+        let entryID1 = map.insert(beatTime: 0, tempo: .default).entryID
+
+        map.insert(beatTime: 4, tempo: t120)
+
+        let directedDuration = try #require(BeatTime(0).duration(to: 2))
+
+        try map.move(by: directedDuration, entryIDs: [entryID1])
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes.sorted() == [2, 4])
+    }
+
+    @Test
+    func move_shiftsBeatTimes() throws {
+        var map = TempoMap()
+
+        map.insert(beatTime: 0, tempo: .default)
+
+        let directedDuration = try #require(BeatTime(0).duration(to: 2))
+
+        try map.move(by: directedDuration)
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes == [2])
+    }
+
+    @Test
+    func quantize_entryIDsRestrictsAffectedEntries() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t140 = try #require(Tempo(uintValue: 140))
+
+        let entryID1 = map.insert(beatTime: BeatTime(0.49), tempo: t120).entryID
+        let entryID2 = map.insert(beatTime: BeatTime(4.49), tempo: t140).entryID
+
+        let quantizer = try BeatQuantizer(factors: [1])
+
+        map.quantize(using: quantizer, entryIDs: [entryID1])
+
+        var beatTimesByID: [TempoMap.EntryID: BeatTime] = [:]
+
+        map.forEach { entryID, beatTime, _, _ in
+            beatTimesByID[entryID] = beatTime
+        }
+
+        #expect(beatTimesByID[entryID1] == 0)
+        #expect(beatTimesByID[entryID2] == BeatTime(4.49))
+    }
+
+    @Test
+    func quantize_snapsBeatTimesToGrid() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t140 = try #require(Tempo(uintValue: 140))
+
+        map.insert(beatTime: BeatTime(0.49), tempo: t120)
+        map.insert(beatTime: BeatTime(3.6), tempo: t140)
+
+        let quantizer = try BeatQuantizer(factors: [1])
+
+        map.quantize(using: quantizer)
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes.sorted() == [0, 4])
     }
 
     @Test
@@ -264,17 +280,27 @@ extension TempoMapTransformTests {
     }
 
     @Test
-    func move_entryIDsRestrictsAffectedEntries() throws {
+    func reverse_invalidAnchorThrows() throws {
         var map = TempoMap()
         let t120 = try #require(Tempo(uintValue: 120))
 
-        let entryID1 = map.insert(beatTime: 0, tempo: .default).entryID
+        map.insert(beatTime: 0, tempo: .default)
+        map.insert(beatTime: 2, tempo: t120)
 
-        map.insert(beatTime: 4, tempo: t120)
+        #expect(throws: TempoMap.Error.invalidAnchor) {
+            try map.reverse(within: BeatTime(1)...3)
+        }
+    }
 
-        let directedDuration = try #require(BeatTime(0).duration(to: 2))
+    @Test
+    func reverse_mirrorsBeatTimes() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
 
-        try map.move(by: directedDuration, entryIDs: [entryID1])
+        map.insert(beatTime: 0, tempo: .default)
+        map.insert(beatTime: 2, tempo: t120)
+
+        try map.reverse()
 
         var beatTimes: [BeatTime] = []
 
@@ -282,6 +308,25 @@ extension TempoMapTransformTests {
             beatTimes.append(beatTime)
         }
 
-        #expect(beatTimes.sorted() == [2, 4])
+        #expect(beatTimes.sorted() == [0, 2])
+    }
+
+    @Test
+    func reverse_validAnchorDoesNotThrow() throws {
+        var map = TempoMap()
+        let t120 = try #require(Tempo(uintValue: 120))
+
+        map.insert(beatTime: 0, tempo: .default)
+        map.insert(beatTime: 2, tempo: t120)
+
+        try map.reverse(within: BeatTime(0)...2)
+
+        var beatTimes: [BeatTime] = []
+
+        map.forEach { _, beatTime, _, _ in
+            beatTimes.append(beatTime)
+        }
+
+        #expect(beatTimes.sorted() == [0, 2])
     }
 }

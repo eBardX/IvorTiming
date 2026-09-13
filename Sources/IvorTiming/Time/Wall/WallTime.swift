@@ -51,6 +51,7 @@ extension WallTime {
         Double(uintValue) / 1_000
     }
 
+    /// The number of seconds since the reference epoch representing this time, as a `Number`.
     public var numberValue: Number {
         Number(Double(uintValue) / 1_000)
     }

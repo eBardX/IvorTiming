@@ -25,4 +25,18 @@ extension TimeProtocolTests {
 
         #expect(!time.formatted().characters.isEmpty)
     }
+
+    @Test
+    func plain_beatTime() {
+        let time: any TimeProtocol = BeatTime(4)
+
+        #expect(time.plain == "4")
+    }
+
+    @Test
+    func plain_wallTime() {
+        let time: any TimeProtocol = WallTime(4_000)
+
+        #expect(time.plain == "4.")
+    }
 }

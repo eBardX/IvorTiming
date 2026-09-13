@@ -60,6 +60,7 @@ extension DurationProtocol {
 
     // MARK: Public Instance Properties
 
+    /// The plain string representation of this duration.
     public var plain: String {
         switch self {
         case let value as BeatDuration:

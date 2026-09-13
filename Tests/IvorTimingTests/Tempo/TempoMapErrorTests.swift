@@ -17,6 +17,20 @@ extension TempoMapErrorTests {
     }
 
     @Test
+    func equality() {
+        #expect(TempoMap.Error.invalidAnchor == .invalidAnchor)
+        #expect(TempoMap.Error.augmentFailure(BeatTime(1)) == .augmentFailure(BeatTime(1)))
+        #expect(TempoMap.Error.invalidAugmentationFactor(2) == .invalidAugmentationFactor(2))
+    }
+
+    @Test
+    func inequality() {
+        #expect(TempoMap.Error.invalidAnchor != .augmentFailure(BeatTime(1)))
+        #expect(TempoMap.Error.augmentFailure(BeatTime(1)) != .augmentFailure(BeatTime(2)))
+        #expect(TempoMap.Error.invalidAugmentationFactor(1) != .invalidAugmentationFactor(2))
+    }
+
+    @Test
     func message_augmentFailure() {
         let msg = TempoMap.Error.augmentFailure(BeatTime(0)).message
 

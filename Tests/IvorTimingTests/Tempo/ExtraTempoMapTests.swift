@@ -13,9 +13,9 @@ struct ExtraTempoMapTests {
 
 extension ExtraTempoMapTests {
     @Test
-    func exactMicrosecondsPerQuarter() {
-        #expect(Extra.exactMicrosecondsPerQuarter.name == "exactMicrosecondsPerQuarter")
-        #expect(Extra.exactMicrosecondsPerQuarter.values.isEmpty)
+    func midiTempo() {
+        #expect(Extra.midiTempo.name == "midiTempo")
+        #expect(Extra.midiTempo.values.isEmpty)
     }
 
     @Test
@@ -25,15 +25,15 @@ extension ExtraTempoMapTests {
     }
 
     @Test
-    func rampFinalTempo() {
-        #expect(Extra.rampFinalTempo.name == "rampFinalTempo")
-        #expect(Extra.rampFinalTempo.values.isEmpty)
+    func rampEndTempo() {
+        #expect(Extra.rampEndTempo.name == "rampFinalTempo")
+        #expect(Extra.rampEndTempo.values.isEmpty)
     }
 
     @Test
-    func rampInitialTempo() {
-        #expect(Extra.rampInitialTempo.name == "rampInitialTempo")
-        #expect(Extra.rampInitialTempo.values.isEmpty)
+    func rampStartTempo() {
+        #expect(Extra.rampStartTempo.name == "rampInitialTempo")
+        #expect(Extra.rampStartTempo.values.isEmpty)
     }
 
     @Test

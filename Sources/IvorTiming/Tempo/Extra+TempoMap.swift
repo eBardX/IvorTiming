@@ -7,24 +7,30 @@ extension Extra {
     // MARK: Public Type Properties
 
     /// The exact microseconds-per-quarter-note value of a MIDI tempo meta
-    /// event, before it's rounded to an integer BPM for a ``TempoMap``
-    /// entry's ``Tempo`` value. Payload: a single `.int`.
-    public static let exactMicrosecondsPerQuarter = Self(name: "exactMicrosecondsPerQuarter")
-
-    /// The starting tempo (BPM) of a JohnnySonic tempo ramp, attached to the
-    /// ``TempoMap`` entry at the ramp's start beat. Payload: a single
-    /// `.double`.
-    public static let rampInitialTempo = Self(name: "rampInitialTempo")
-
-    /// The ending tempo (BPM) of a JohnnySonic tempo ramp, attached to the
-    /// ``TempoMap`` entry at the ramp's start beat. Payload: a single
-    /// `.double`.
-    public static let rampFinalTempo = Self(name: "rampFinalTempo")
+    /// event, before it’s rounded to an integer BPM for a ``TempoMap``
+    /// entry’s ``Tempo`` value. Payload: a single `.int`.
+    public static let midiTempo = Self(name: "midiTempo")
 
     /// The duration (in beats) of a JohnnySonic tempo ramp, attached to the
-    /// ``TempoMap`` entry at the ramp's start beat. Payload: a single
+    /// ``TempoMap`` entry at the ramp’s start beat. Payload: a single
     /// `.double`.
     public static let rampDuration = Self(name: "rampDuration")
+
+    /// The ending tempo (BPM) of a JohnnySonic tempo ramp, attached to the
+    /// ``TempoMap`` entry at the ramp’s start beat. Payload: a single
+    /// `.double`.
+    ///
+    /// The serialized name stays `rampFinalTempo` for compatibility with
+    /// previously saved projects.
+    public static let rampEndTempo = Self(name: "rampFinalTempo")
+
+    /// The starting tempo (BPM) of a JohnnySonic tempo ramp, attached to the
+    /// ``TempoMap`` entry at the ramp’s start beat. Payload: a single
+    /// `.double`.
+    ///
+    /// The serialized name stays `rampInitialTempo` for compatibility with
+    /// previously saved projects.
+    public static let rampStartTempo = Self(name: "rampInitialTempo")
 
     /// The literal human-readable tempo text (e.g. `"Allegro"`) from an ABC
     /// `Q:` field or a Guido `\tempo` tag, attached to a ``TempoMap`` entry.

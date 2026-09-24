@@ -5,7 +5,7 @@ public import XestiTools
 
 private import Foundation
 
-/// A point in musical beat time, measured in beats from a reference position.
+/// A point in musical beat time, measured in beats from time zero.
 public struct BeatTime {
 
     // MARK: Public Initializers

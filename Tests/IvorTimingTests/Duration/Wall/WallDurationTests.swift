@@ -45,7 +45,7 @@ extension WallDurationTests {
 
     @Test
     func formatted() {
-        let plain = WallDuration(1_500).formatted().characters.reduce(into: "") { $0.append($1) }
+        let plain = WallDuration(1_500_000).formatted().characters.reduce(into: "") { $0.append($1) }
 
         #expect(plain == "1.500")
     }
@@ -75,20 +75,28 @@ extension WallDurationTests {
     }
 
     @Test
+    func numberValue() {
+        #expect(WallDuration(1_500_000).numberValue == Number(numerator: 3, denominator: 2))
+        #expect(WallDuration(1_000_001).numberValue == Number(numerator: 1_000_001, denominator: 1_000_000))
+    }
+
+    @Test
     func plain() {
-        #expect(WallDuration(0).plain == "0.")
-        #expect(WallDuration(1_000).plain == "1.")
-        #expect(WallDuration(1_500).plain == "1.5")
-        #expect(WallDuration(1_050).plain == "1.05")
-        #expect(WallDuration(1_005).plain == "1.005")
+        #expect(WallDuration(0).plain == "0")
+        #expect(WallDuration(1_000_000).plain == "1")
+        #expect(WallDuration(1_500_000).plain == "1.5")
+        #expect(WallDuration(1_050_000).plain == "1.05")
+        #expect(WallDuration(1_005_000).plain == "1.005")
+        #expect(WallDuration(1_000_001).plain == "1.000001")
     }
 
     @Test
     func plain_roundTrip() {
-        #expect(WallDuration(plain: "1") == WallDuration(1_000))
-        #expect(WallDuration(plain: "1.5") == WallDuration(1_500))
-        #expect(WallDuration(plain: "1.05") == WallDuration(1_050))
-        #expect(WallDuration(plain: "1.005") == WallDuration(1_005))
+        #expect(WallDuration(plain: "1") == WallDuration(1_000_000))
+        #expect(WallDuration(plain: "1.5") == WallDuration(1_500_000))
+        #expect(WallDuration(plain: "1.05") == WallDuration(1_050_000))
+        #expect(WallDuration(plain: "1.005") == WallDuration(1_005_000))
+        #expect(WallDuration(plain: "1.000001") == WallDuration(1_000_001))
         #expect(WallDuration(plain: "not a number") == nil)
     }
 

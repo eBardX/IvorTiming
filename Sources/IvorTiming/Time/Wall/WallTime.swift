@@ -5,7 +5,7 @@ public import XestiTools
 
 private import Foundation
 
-/// A point in wall-clock time, measured in milliseconds from a reference epoch.
+/// A point in wall-clock time, measured in microseconds from time zero.
 public struct WallTime {
 
     // MARK: Public Initializers
@@ -22,16 +22,16 @@ public struct WallTime {
         self.init(seconds: numberValue.doubleValue)
     }
 
-    /// Creates a ``WallTime`` from a millisecond count.
+    /// Creates a ``WallTime`` from a microsecond count.
     ///
-    /// - Parameter uintValue:  The number of milliseconds since the reference epoch.
+    /// - Parameter uintValue:  The number of microseconds from time zero.
     public init?(uintValue: UInt) {
         self.uintValue = uintValue
     }
 
     // MARK: Public Instance Properties
 
-    /// The number of milliseconds since the reference epoch representing this time.
+    /// The number of microseconds from time zero to this time.
     public let uintValue: UInt
 }
 
@@ -46,14 +46,14 @@ extension WallTime {
 
     // MARK: Public Instance Properties
 
-    /// The number of seconds since the reference epoch representing this time.
+    /// The number of seconds from time zero to this time.
     public var doubleValue: Double {
-        Double(uintValue) / 1_000
+        Double(uintValue) / 1_000_000
     }
 
-    /// The number of seconds since the reference epoch representing this time, as a `Number`.
+    /// The number of seconds from time zero to this time, as a `Number`.
     public var numberValue: Number {
-        Number(Double(uintValue) / 1_000)
+        Number(uintValue) / 1_000_000
     }
 
     /// The plain string representation of this wall time, in seconds, omitting trailing zero
@@ -64,16 +64,16 @@ extension WallTime {
 
     // MARK: Internal Initializers
 
-    // Rounds to the nearest millisecond.
+    // Rounds to the nearest microsecond.
     internal init(seconds: Double) {
-        self.init(uintValue: UInt((max(seconds, 0) * 1_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
     }
 
     // MARK: Private Type Properties
 
     private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
-        .decimalPrecision(0...3)
-        .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
+        .decimalPrecision(0...6)
+        .fractionDisplay(strategy: .decimal)
         .grouping(false)
 
     private static let plainLocale = Locale(identifier: "en_US_POSIX")

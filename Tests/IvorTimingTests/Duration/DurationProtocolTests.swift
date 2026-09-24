@@ -35,8 +35,8 @@ extension DurationProtocolTests {
 
     @Test
     func plain_wallDuration() {
-        let duration: any DurationProtocol = WallDuration(4_000)
+        let duration: any DurationProtocol = WallDuration(4_000_000)
 
-        #expect(duration.plain == "4.")
+        #expect(duration.plain == "4")
     }
 }

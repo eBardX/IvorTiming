@@ -47,10 +47,10 @@ extension TimeConverter {
     /// - Returns:  The ``BeatTime`` corresponding to `wallTime`.
     public func beatTime(at wallTime: WallTime) -> BeatTime {
         guard !entries.isEmpty
-        else { return BeatTime(Number(wallTime.doubleValue) * (defaultTempo.numberValue / Tempo.default.numberValue)) }
+        else { return BeatTime(wallTime.numberValue * (defaultTempo.numberValue / Tempo.default.numberValue)) }
 
         if wallTime < entries[0].wallTime {
-            return BeatTime(Number(wallTime.doubleValue) * entries[0].tempo.numberValue / Tempo.default.numberValue)
+            return BeatTime(wallTime.numberValue * entries[0].tempo.numberValue / Tempo.default.numberValue)
         }
 
         let entry = entries[floorIndex(for: wallTime)]

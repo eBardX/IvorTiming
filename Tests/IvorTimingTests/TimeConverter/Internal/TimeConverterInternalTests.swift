@@ -35,8 +35,8 @@ extension TimeConverterInternalTests {
 
         let tconv = TimeConverter(tempoMap: tmap)
 
-        #expect(tconv.floorIndex(for: WallTime(500)) == 0)
-        #expect(tconv.floorIndex(for: WallTime(2_000)) == 1)
+        #expect(tconv.floorIndex(for: WallTime(500_000)) == 0)
+        #expect(tconv.floorIndex(for: WallTime(2_000_000)) == 1)
     }
 
     @Test
@@ -52,8 +52,8 @@ extension TimeConverterInternalTests {
         tconv.updateDerivedProperties()
 
         #expect(tconv.entries[0].wallTime == .zero)
-        #expect(tconv.entries[0].wallDuration == WallDuration(1_000))
-        #expect(tconv.entries[1].wallTime == WallTime(1_000))
+        #expect(tconv.entries[0].wallDuration == WallDuration(1_000_000))
+        #expect(tconv.entries[1].wallTime == WallTime(1_000_000))
     }
 
     @Test
@@ -70,8 +70,8 @@ extension TimeConverterInternalTests {
         tconv.updateDerivedProperties()
 
         #expect(tconv.entries[0].tempoChange == -60)
-        #expect(tconv.entries[0].wallDuration == WallDuration(2_493))
-        #expect(tconv.entries[1].wallTime == WallTime(2_493))
+        #expect(tconv.entries[0].wallDuration == WallDuration(2_492_901))
+        #expect(tconv.entries[1].wallTime == WallTime(2_492_901))
     }
 
     @Test
@@ -97,7 +97,7 @@ extension TimeConverterInternalTests {
         tconv.updateDerivedProperties()
 
         #expect(tconv.entries[0].tempoChange == 60)
-        #expect(tconv.entries[0].wallDuration == WallDuration(3_142))
-        #expect(tconv.entries[1].wallTime == WallTime(3_142))
+        #expect(tconv.entries[0].wallDuration == WallDuration(3_141_593))
+        #expect(tconv.entries[1].wallTime == WallTime(3_141_593))
     }
 }

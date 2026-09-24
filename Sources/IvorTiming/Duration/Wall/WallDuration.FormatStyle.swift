@@ -49,7 +49,7 @@ extension WallDuration.FormatStyle: FormatStyle {
     ///
     /// - Returns:  An attributed string representation of `value`.
     public func format(_ value: WallDuration) -> AttributedString {
-        baseStyle.format(value.numberValue)
+        baseStyle.format(Number(value.doubleValue))
     }
 }
 

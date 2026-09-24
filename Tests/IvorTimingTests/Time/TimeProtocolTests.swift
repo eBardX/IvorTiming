@@ -35,8 +35,8 @@ extension TimeProtocolTests {
 
     @Test
     func plain_wallTime() {
-        let time: any TimeProtocol = WallTime(4_000)
+        let time: any TimeProtocol = WallTime(4_000_000)
 
-        #expect(time.plain == "4.")
+        #expect(time.plain == "4")
     }
 }

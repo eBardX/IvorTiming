@@ -21,7 +21,7 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
-        #expect(tconv.beatTime(at: WallTime(1_000)) == BeatTime(2))
+        #expect(tconv.beatTime(at: WallTime(1_000_000)) == BeatTime(2))
     }
 
     @Test
@@ -34,8 +34,8 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
-        #expect(tconv.beatTime(at: WallTime(1_000)) == BeatTime(2))
-        #expect(tconv.beatTime(at: WallTime(2_000)) == BeatTime(4))
+        #expect(tconv.beatTime(at: WallTime(1_000_000)) == BeatTime(2))
+        #expect(tconv.beatTime(at: WallTime(2_000_000)) == BeatTime(4))
     }
 
     @Test
@@ -43,8 +43,8 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: TempoMap())
 
         #expect(tconv.beatTime(at: WallTime(0)) == BeatTime(0))
-        #expect(tconv.beatTime(at: WallTime(2_000)) == BeatTime(2))
-        #expect(tconv.beatTime(at: WallTime(4_000)) == BeatTime(4))
+        #expect(tconv.beatTime(at: WallTime(2_000_000)) == BeatTime(2))
+        #expect(tconv.beatTime(at: WallTime(4_000_000)) == BeatTime(4))
     }
 
     @Test
@@ -83,7 +83,7 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
-        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1_000))
+        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1_000_000))
     }
 
     @Test
@@ -96,8 +96,8 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: tmap)
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
-        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1_000))
-        #expect(tconv.wallTime(at: BeatTime(4)) == WallTime(2_000))
+        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(1_000_000))
+        #expect(tconv.wallTime(at: BeatTime(4)) == WallTime(2_000_000))
     }
 
     @Test
@@ -105,8 +105,8 @@ extension TimeConverterTests {
         let tconv = TimeConverter(tempoMap: TempoMap())
 
         #expect(tconv.wallTime(at: BeatTime(0)) == WallTime(0))
-        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(2_000))
-        #expect(tconv.wallTime(at: BeatTime(4)) == WallTime(4_000))
+        #expect(tconv.wallTime(at: BeatTime(2)) == WallTime(2_000_000))
+        #expect(tconv.wallTime(at: BeatTime(4)) == WallTime(4_000_000))
     }
 
     @Test

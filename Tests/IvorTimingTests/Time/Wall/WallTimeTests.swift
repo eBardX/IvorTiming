@@ -3,6 +3,7 @@
 import Foundation
 @testable import IvorTiming
 import Testing
+import XestiNumbers
 import XestiTools
 
 struct WallTimeTests {
@@ -52,7 +53,7 @@ extension WallTimeTests {
 
     @Test
     func formatted() {
-        let plain = WallTime(1_500).formatted().characters.reduce(into: "") { $0.append($1) }
+        let plain = WallTime(1_500_000).formatted().characters.reduce(into: "") { $0.append($1) }
 
         #expect(plain == "1.500")
     }
@@ -97,20 +98,28 @@ extension WallTimeTests {
     }
 
     @Test
+    func numberValue() {
+        #expect(WallTime(1_500_000).numberValue == Number(numerator: 3, denominator: 2))
+        #expect(WallTime(1_000_001).numberValue == Number(numerator: 1_000_001, denominator: 1_000_000))
+    }
+
+    @Test
     func plain() {
-        #expect(WallTime(0).plain == "0.")
-        #expect(WallTime(1_000).plain == "1.")
-        #expect(WallTime(1_500).plain == "1.5")
-        #expect(WallTime(1_050).plain == "1.05")
-        #expect(WallTime(1_005).plain == "1.005")
+        #expect(WallTime(0).plain == "0")
+        #expect(WallTime(1_000_000).plain == "1")
+        #expect(WallTime(1_500_000).plain == "1.5")
+        #expect(WallTime(1_050_000).plain == "1.05")
+        #expect(WallTime(1_005_000).plain == "1.005")
+        #expect(WallTime(1_000_001).plain == "1.000001")
     }
 
     @Test
     func plain_roundTrip() {
-        #expect(WallTime(plain: "1") == WallTime(1_000))
-        #expect(WallTime(plain: "1.5") == WallTime(1_500))
-        #expect(WallTime(plain: "1.05") == WallTime(1_050))
-        #expect(WallTime(plain: "1.005") == WallTime(1_005))
+        #expect(WallTime(plain: "1") == WallTime(1_000_000))
+        #expect(WallTime(plain: "1.5") == WallTime(1_500_000))
+        #expect(WallTime(plain: "1.05") == WallTime(1_050_000))
+        #expect(WallTime(plain: "1.005") == WallTime(1_005_000))
+        #expect(WallTime(plain: "1.000001") == WallTime(1_000_001))
         #expect(WallTime(plain: "not a number") == nil)
     }
 

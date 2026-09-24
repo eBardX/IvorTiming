@@ -5,7 +5,7 @@ public import XestiTools
 
 private import Foundation
 
-/// A non-negative duration of wall-clock time, measured in milliseconds.
+/// A non-negative duration of wall-clock time, measured in microseconds.
 public struct WallDuration {
 
     // MARK: Public Initializers
@@ -22,16 +22,16 @@ public struct WallDuration {
         self.init(seconds: numberValue.doubleValue)
     }
 
-    /// Creates a ``WallDuration`` from a millisecond count.
+    /// Creates a ``WallDuration`` from a microsecond count.
     ///
-    /// - Parameter uintValue:  The number of milliseconds.
+    /// - Parameter uintValue:  The number of microseconds.
     public init?(uintValue: UInt) {
         self.uintValue = uintValue
     }
 
     // MARK: Public Instance Properties
 
-    /// The number of milliseconds representing this duration.
+    /// The number of microseconds representing this duration.
     public let uintValue: UInt
 }
 
@@ -48,12 +48,12 @@ extension WallDuration {
 
     /// The number of seconds representing this duration.
     public var doubleValue: Double {
-        Double(uintValue) / 1_000
+        Double(uintValue) / 1_000_000
     }
 
     /// The number of seconds representing this duration, as a `Number`.
     public var numberValue: Number {
-        Number(Double(uintValue) / 1_000)
+        Number(uintValue) / 1_000_000
     }
 
     /// The plain string representation of this wall duration, in seconds, omitting trailing zero
@@ -64,16 +64,16 @@ extension WallDuration {
 
     // MARK: Internal Initializers
 
-    // Rounds to the nearest millisecond.
+    // Rounds to the nearest microsecond.
     internal init(seconds: Double) {
-        self.init(uintValue: UInt((max(seconds, 0) * 1_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
     }
 
     // MARK: Private Type Properties
 
     private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
-        .decimalPrecision(0...3)
-        .fractionDisplay(strategy: .simple(alwaysShowDenominator: false))
+        .decimalPrecision(0...6)
+        .fractionDisplay(strategy: .decimal)
         .grouping(false)
 
     private static let plainLocale = Locale(identifier: "en_US_POSIX")

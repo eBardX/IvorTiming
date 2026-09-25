@@ -1,5 +1,5 @@
 {
-  "originHash" : "55ea79567d4c5144253e1b8a54e562088500e9e2e981e3c2a93bfbe5ae85a445",
+  "originHash" : "898e21d44e5a7134ad3ab2f252a109cb2e89f20ac585f176c8a9a49d3b59b9a1",
   "pins" : [
     {
       "identity" : "bigint",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "63feef7820abb1a8fb08587d7da56bb0b7db8751",
         "version" : "6.0.1"
+      }
+    },
+    {
+      "identity" : "ivorsmpte",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eBardX/IvorSMPTE.git",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "8d31137b34ceb47c0e5fd2040a6cf2e1884c9a2a"
       }
     },
     {

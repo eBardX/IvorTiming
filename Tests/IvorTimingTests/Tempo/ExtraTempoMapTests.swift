@@ -19,6 +19,12 @@ extension ExtraTempoMapTests {
     }
 
     @Test
+    func midiTimeCode() {
+        #expect(Extra.midiTimeCode.name == "midiTimeCode")
+        #expect(Extra.midiTimeCode.values.isEmpty)
+    }
+
+    @Test
     func rampDuration() {
         #expect(Extra.rampDuration.name == "rampDuration")
         #expect(Extra.rampDuration.values.isEmpty)
@@ -34,6 +40,12 @@ extension ExtraTempoMapTests {
     func rampStartTempo() {
         #expect(Extra.rampStartTempo.name == "rampInitialTempo")
         #expect(Extra.rampStartTempo.values.isEmpty)
+    }
+
+    @Test
+    func smpteOffset() {
+        #expect(Extra.smpteOffset.name == "smpteOffset")
+        #expect(Extra.smpteOffset.values.isEmpty)
     }
 
     @Test

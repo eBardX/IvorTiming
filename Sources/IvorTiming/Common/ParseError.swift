@@ -11,6 +11,9 @@ public enum ParseError {
 // MARK: - EnhancedError
 
 extension ParseError: EnhancedError {
+
+    // MARK: Public Instance Properties
+
     /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")

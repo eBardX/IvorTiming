@@ -56,6 +56,9 @@ extension BeatDuration.FormatStyle: FormatStyle {
 // MARK: -
 
 extension BeatDuration {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this beat duration using
     /// the default format style.
     public func formatted() -> AttributedString {

@@ -146,7 +146,7 @@ extension BeatTime: TimeProtocol {
     /// Returns the beat time obtained by moving this time by a directed
     /// duration.
     ///
-    /// - Parameter directedDuration: The directed duration to move by.
+    /// - Parameter directedDuration:  The directed duration to move by.
     ///
     /// - Returns:  The resulting beat time, or `nil` if the result is invalid.
     public func moved(by directedDuration: DirectedDuration<DurationType>) -> Self? {

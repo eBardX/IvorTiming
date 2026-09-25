@@ -35,6 +35,9 @@ extension TempoMap {
 // MARK: - EnhancedError
 
 extension TempoMap.Error: EnhancedError {
+
+    // MARK: Public Instance Properties
+
     /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")

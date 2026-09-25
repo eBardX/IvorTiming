@@ -25,6 +25,9 @@ public struct WallTime {
     /// Creates a ``WallTime`` from a microsecond count.
     ///
     /// - Parameter uintValue:  The number of microseconds from time zero.
+    ///
+    /// - Returns:  A new ``WallTime``. This initializer never returns `nil`; it is
+    ///             failable only to satisfy the `UIntRepresentable` requirement.
     public init?(uintValue: UInt) {
         self.uintValue = uintValue
     }
@@ -33,6 +36,13 @@ public struct WallTime {
 
     /// The number of microseconds from time zero to this time.
     public let uintValue: UInt
+
+    // MARK: Internal Initializers
+
+    // Rounds to the nearest microsecond.
+    internal init(seconds: Double) {
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+    }
 }
 
 // MARK: -
@@ -62,13 +72,6 @@ extension WallTime {
         Self.plainFormatStyle.format(numberValue)
     }
 
-    // MARK: Internal Initializers
-
-    // Rounds to the nearest microsecond.
-    internal init(seconds: Double) {
-        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
-    }
-
     // MARK: Private Type Properties
 
     private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
@@ -83,10 +86,11 @@ extension WallTime {
 
 // MARK: - CustomStringConvertible
 
-extension WallTime {
+extension WallTime: CustomStringConvertible {
 
     // MARK: Public Instance Properties
 
+    /// The plain string representation of this wall time.
     public var description: String {
         plain
     }
@@ -147,7 +151,7 @@ extension WallTime: TimeProtocol {
     /// Returns the wall time obtained by moving this time by a directed
     /// duration.
     ///
-    /// - Parameter directedDuration: The directed duration to move by.
+    /// - Parameter directedDuration:  The directed duration to move by.
     ///
     /// - Returns:  The resulting wall time, or `nil` if the result is invalid.
     public func moved(by directedDuration: DirectedDuration<DurationType>) -> Self? {

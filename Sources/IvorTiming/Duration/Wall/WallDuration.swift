@@ -25,6 +25,9 @@ public struct WallDuration {
     /// Creates a ``WallDuration`` from a microsecond count.
     ///
     /// - Parameter uintValue:  The number of microseconds.
+    ///
+    /// - Returns:  A new ``WallDuration``. This initializer never returns `nil`; it is
+    ///             failable only to satisfy the `UIntRepresentable` requirement.
     public init?(uintValue: UInt) {
         self.uintValue = uintValue
     }
@@ -33,6 +36,13 @@ public struct WallDuration {
 
     /// The number of microseconds representing this duration.
     public let uintValue: UInt
+
+    // MARK: Internal Initializers
+
+    // Rounds to the nearest microsecond.
+    internal init(seconds: Double) {
+        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+    }
 }
 
 // MARK: -
@@ -62,13 +72,6 @@ extension WallDuration {
         Self.plainFormatStyle.format(numberValue)
     }
 
-    // MARK: Internal Initializers
-
-    // Rounds to the nearest microsecond.
-    internal init(seconds: Double) {
-        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
-    }
-
     // MARK: Private Type Properties
 
     private static let plainFormatStyle = Number.FormatStyle(locale: plainLocale)
@@ -83,10 +86,11 @@ extension WallDuration {
 
 // MARK: - CustomStringConvertible
 
-extension WallDuration {
+extension WallDuration: CustomStringConvertible {
 
     // MARK: Public Instance Properties
 
+    /// The plain string representation of this wall duration.
     public var description: String {
         plain
     }

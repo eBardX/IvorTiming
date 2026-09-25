@@ -56,6 +56,9 @@ extension WallTime.FormatStyle: FormatStyle {
 // MARK: -
 
 extension WallTime {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this wall time using the
     /// default format style.
     public func formatted() -> AttributedString {

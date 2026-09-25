@@ -36,8 +36,8 @@ extension BeatQuantizer {
 
     // MARK: Public Instance Properties
 
-    /// The finest grid subdivision this quantizer snaps to, as a beat duration (`1/lcmFactor`
-    /// beats).
+    /// The finest grid subdivision this quantizer snaps to, as a beat duration — the reciprocal
+    /// of the least common multiple of its subdivision factors.
     public var gridUnit: BeatDuration {
         BeatDuration(1 / lcmFactor)
     }

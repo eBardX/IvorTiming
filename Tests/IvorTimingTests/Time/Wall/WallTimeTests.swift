@@ -28,6 +28,20 @@ extension WallTimeTests {
     }
 
     @Test
+    func description() {
+        #expect(WallTime(0).description == "0")
+        #expect(WallTime(1_500_000).description == "1.5")
+        #expect(WallTime(1_000_001).description == "1.000001")
+    }
+
+    @Test
+    func doubleValue() {
+        #expect(WallTime(0).doubleValue == 0)
+        #expect(WallTime(1_500_000).doubleValue == 1.5)
+        #expect(WallTime(250_000).doubleValue == 0.25)
+    }
+
+    @Test
     func duration_to_backward() {
         let result = WallTime(3).duration(to: WallTime(1))
 
@@ -73,6 +87,23 @@ extension WallTimeTests {
         let set: Set<WallTime> = [WallTime(1), WallTime(1), WallTime(2)]
 
         #expect(set.count == 2)
+    }
+
+    @Test
+    func init_seconds() {
+        #expect(WallTime(seconds: 0) == WallTime(0))
+        #expect(WallTime(seconds: 1.5) == WallTime(1_500_000))
+    }
+
+    @Test
+    func init_seconds_clampsNegative() {
+        #expect(WallTime(seconds: -1) == .zero)
+    }
+
+    @Test
+    func init_seconds_roundsToMicrosecond() {
+        #expect(WallTime(seconds: 1.0000004) == WallTime(1_000_000))
+        #expect(WallTime(seconds: 1.0000006) == WallTime(1_000_001))
     }
 
     @Test

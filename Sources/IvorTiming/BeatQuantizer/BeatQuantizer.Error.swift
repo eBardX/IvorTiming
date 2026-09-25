@@ -19,6 +19,9 @@ extension BeatQuantizer {
 // MARK: - EnhancedError
 
 extension BeatQuantizer.Error: EnhancedError {
+
+    // MARK: Public Instance Properties
+
     /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorTiming")

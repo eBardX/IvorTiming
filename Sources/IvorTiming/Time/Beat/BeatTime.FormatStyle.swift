@@ -56,6 +56,9 @@ extension BeatTime.FormatStyle: FormatStyle {
 // MARK: -
 
 extension BeatTime {
+
+    // MARK: Public Instance Methods
+
     /// Returns an attributed string representation of this beat time using the
     /// default format style.
     public func formatted() -> AttributedString {

@@ -9,7 +9,7 @@ private import XestiNumbers
 ///
 /// Each factor `n` defines a grid of `1/n`-beat subdivisions. The quantizer
 /// snaps to whichever grid point across all factors is nearest to the input
-/// time. An empty factor array quantizes to the nearest integer beat.
+/// time.
 public struct BeatQuantizer {
 
     // MARK: Public Initializers

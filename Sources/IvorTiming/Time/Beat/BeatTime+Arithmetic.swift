@@ -6,6 +6,30 @@ extension BeatTime {
 
     // MARK: Public Type Methods
 
+    /// Returns a beat time scaled by a factor.
+    ///
+    /// - Parameter time:    The beat time to scale.
+    /// - Parameter factor:  The scaling factor.
+    ///
+    /// - Returns:  The product of `time` and `factor`.
+    ///
+    /// - Precondition: `factor` must be rational and non-negative.
+    public static func * (time: Self,
+                          factor: Number) -> Self {
+        BeatTime(time.numberValue * factor)
+    }
+
+    /// Scales a beat time by a factor in place.
+    ///
+    /// - Parameter time:    The beat time to update.
+    /// - Parameter factor:  The scaling factor.
+    ///
+    /// - Precondition: `factor` must be rational and non-negative.
+    public static func *= (time: inout Self,
+                           factor: Number) {
+        time = time * factor
+    }
+
     /// Returns a beat time advanced by a duration.
     ///
     /// - Parameter time:  The beat time to advance.
@@ -32,18 +56,11 @@ extension BeatTime {
     /// - Parameter dur:   The beat duration to subtract.
     ///
     /// - Returns:  The beat time `dur` beats before `time`.
+    ///
+    /// - Precondition: `dur` must not exceed `time`.
     public static func - (time: Self,
                           dur: BeatDuration) -> Self {
         BeatTime(time.numberValue - dur.numberValue)
-    }
-
-    /// Retreats a beat time by a duration in place.
-    ///
-    /// - Parameter time:  The beat time to update.
-    /// - Parameter dur:   The beat duration to subtract.
-    public static func -= (time: inout Self,
-                           dur: BeatDuration) {
-        time = time - dur
     }
 
     /// Returns the duration between two beat times.
@@ -52,28 +69,21 @@ extension BeatTime {
     /// - Parameter time2:  The second beat time.
     ///
     /// - Returns:  The beat duration from `time2` to `time1`.
+    ///
+    /// - Precondition: `time2` must not be later than `time1`.
     public static func - (time1: Self,
                           time2: Self) -> BeatDuration {
         BeatDuration(time1.numberValue - time2.numberValue)
     }
 
-    /// Returns a beat time scaled by a factor.
+    /// Retreats a beat time by a duration in place.
     ///
-    /// - Parameter time:    The beat time to scale.
-    /// - Parameter factor:  The scaling factor.
+    /// - Parameter time:  The beat time to update.
+    /// - Parameter dur:   The beat duration to subtract.
     ///
-    /// - Returns:  The product of `time` and `factor`.
-    public static func * (time: Self,
-                          factor: Number) -> Self {
-        BeatTime(time.numberValue * factor)
-    }
-
-    /// Scales a beat time by a factor in place.
-    ///
-    /// - Parameter time:    The beat time to update.
-    /// - Parameter factor:  The scaling factor.
-    public static func *= (time: inout Self,
-                           factor: Number) {
-        time = time * factor
+    /// - Precondition: `dur` must not exceed `time`.
+    public static func -= (time: inout Self,
+                           dur: BeatDuration) {
+        time = time - dur
     }
 }

@@ -8,6 +8,26 @@ extension WallDuration {
 
     // MARK: Public Type Methods
 
+    /// Returns a wall duration scaled by a factor.
+    ///
+    /// - Parameter dur:     The wall duration to scale.
+    /// - Parameter factor:  The scaling factor.
+    ///
+    /// - Returns:  The product of `dur` and `factor`.
+    public static func * (dur: Self,
+                          factor: Number) -> Self {
+        WallDuration(seconds: dur.doubleValue * factor.doubleValue)
+    }
+
+    /// Scales a wall duration by a factor in place.
+    ///
+    /// - Parameter dur:     The wall duration to update.
+    /// - Parameter factor:  The scaling factor.
+    public static func *= (dur: inout Self,
+                           factor: Number) {
+        dur = dur * factor
+    }
+
     /// Returns the sum of two wall durations.
     ///
     /// - Parameter dur1:   The first wall duration.
@@ -34,6 +54,8 @@ extension WallDuration {
     /// - Parameter dur2:   The wall duration to subtract.
     ///
     /// - Returns:  The difference of `dur1` and `dur2`.
+    ///
+    /// - Precondition: `dur2` must not exceed `dur1`.
     public static func - (dur1: Self,
                           dur2: Self) -> Self {
         WallDuration(dur1.uintValue - dur2.uintValue)
@@ -43,28 +65,10 @@ extension WallDuration {
     ///
     /// - Parameter dur1:   The wall duration to update.
     /// - Parameter dur2:   The wall duration to subtract.
+    ///
+    /// - Precondition: `dur2` must not exceed `dur1`.
     public static func -= (dur1: inout Self,
                            dur2: Self) {
         dur1 = dur1 - dur2
-    }
-
-    /// Returns this wall duration scaled by a factor.
-    ///
-    /// - Parameter dur:     The wall duration to scale.
-    /// - Parameter factor:  The scaling factor.
-    ///
-    /// - Returns:  The product of `dur` and `factor`.
-    public static func * (dur: Self,
-                          factor: Number) -> Self {
-        WallDuration(seconds: dur.doubleValue * factor.doubleValue)
-    }
-
-    /// Scales this wall duration by a factor in place.
-    ///
-    /// - Parameter dur:     The wall duration to update.
-    /// - Parameter factor:  The scaling factor.
-    public static func *= (dur: inout Self,
-                           factor: Number) {
-        dur = dur * factor
     }
 }

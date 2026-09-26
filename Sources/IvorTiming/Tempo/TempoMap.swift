@@ -340,7 +340,7 @@ extension TempoMap: Codable {
     /// Entries that exactly duplicate one another — same beat time, tempo, and
     /// extras — are collapsed, keeping the first occurrence, the same rule
     /// ``insert(beatTime:tempo:extras:)`` applies to a live tempo map. This is
-    /// needed here, not just belt-and-braces: a document saved before that dedup
+    /// needed here, not just belt-and-suspenders: a document saved before that dedup
     /// rule existed can have duplicates already baked into its encoded form, and
     /// decoding is the only place left to catch those.
     ///

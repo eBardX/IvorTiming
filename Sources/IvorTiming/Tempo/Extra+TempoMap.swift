@@ -40,8 +40,8 @@ extension Extra {
     public static let rampStartTempo = Self(name: "rampInitialTempo")
 
     /// The SMPTE timecode at which a work starts (at beat zero), attached to
-    /// the ``TempoMap`` entry at beat zero. Use it as the start timecode of a
-    /// ``TimecodeConverter``. Payload: a `.string` holding the frame rate (a
+    /// the ``TempoMap`` entry at beat zero. Use it as the start timecode of an
+    /// `SMPTETimeConverter`. Payload: a `.string` holding the frame rate (a
     /// `SMPTEFrameRate` description, such as `"25"` or `"29.97DF"`), then a
     /// `.string` holding the timecode (an `SMPTETime` description, such as
     /// `"01:00:00:00"`).

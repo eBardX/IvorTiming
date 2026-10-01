@@ -6,7 +6,7 @@ extension TempoMap {
 
     // MARK: Internal Nested Types
 
-    internal enum Entry {
+    internal enum StoredEntry {
         case extended(EntryID, BeatTime, Tempo, Extras)
         case simple(EntryID, BeatTime, Tempo)
 
@@ -32,7 +32,7 @@ extension TempoMap {
 
 // MARK: -
 
-extension TempoMap.Entry {
+extension TempoMap.StoredEntry {
 
     // MARK: Internal Instance Properties
 
@@ -73,7 +73,7 @@ extension TempoMap.Entry {
 
 // MARK: - Codable
 
-extension TempoMap.Entry: Codable {
+extension TempoMap.StoredEntry: Codable {
 
     // MARK: Internal Initializers
 
@@ -110,7 +110,7 @@ extension TempoMap.Entry: Codable {
 
 // MARK: - Comparable
 
-extension TempoMap.Entry: Comparable {
+extension TempoMap.StoredEntry: Comparable {
 
     // MARK: Internal Type Methods
 
@@ -122,7 +122,7 @@ extension TempoMap.Entry: Comparable {
 
 // MARK: - Equatable
 
-extension TempoMap.Entry: Equatable {
+extension TempoMap.StoredEntry: Equatable {
 
     // MARK: Internal Type Methods
 
@@ -142,5 +142,5 @@ extension TempoMap.Entry: Equatable {
 
 // MARK: - Sendable
 
-extension TempoMap.Entry: Sendable {
+extension TempoMap.StoredEntry: Sendable {
 }

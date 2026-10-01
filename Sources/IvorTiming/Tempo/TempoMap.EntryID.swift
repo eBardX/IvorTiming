@@ -17,7 +17,7 @@ extension TempoMap {
     /// an edit that reorders it, rather than recomputing which ordinal position it
     /// landed on.
     ///
-    /// Not persisted: `TempoMap.Entry`’s `Codable` conformance never encodes an
+    /// Not persisted: `TempoMap.StoredEntry`’s `Codable` conformance never encodes an
     /// entry’s identity, and assigns every decoded entry a fresh one, the same as a
     /// newly inserted entry. An entry’s identity is therefore stable only within one
     /// in-memory tempo map’s lifetime — never across an encode/decode round trip, and

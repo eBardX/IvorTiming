@@ -20,9 +20,9 @@ extension TempoMapInternalTests {
     func deduplicated_keepsFirstOccurrence() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90  = try #require(Tempo(uintValue: 90))
-        let first = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let duplicate = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let distinct = TempoMap.Entry(beatTime: BeatTime(2), tempo: t90, extras: nil)
+        let first = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let duplicate = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let distinct = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t90, extras: nil)
         let result = TempoMap.deduplicated([first, duplicate, distinct])
 
         #expect(result.count == 2)
@@ -39,7 +39,9 @@ extension TempoMapInternalTests {
 
         var foundEntryID: TempoMap.EntryID?
 
-        tmap.forEach { entryID, _, _, _ in foundEntryID = entryID }
+        for entry in tmap {
+            foundEntryID = entry.entryID
+        }
 
         #expect(try tmap.firstIndex(entryID: #require(foundEntryID)) == 0)
     }
@@ -82,9 +84,9 @@ extension TempoMapInternalTests {
     @Test
     func hasExtras_withExtras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let entry = TempoMap.Entry(beatTime: BeatTime(1),
-                                   tempo: t120,
-                                   extras: Extras(elements: [Extra(name: "tag")]))
+        let entry = TempoMap.StoredEntry(beatTime: BeatTime(1),
+                                         tempo: t120,
+                                         extras: Extras(elements: [Extra(name: "tag")]))
 
         #expect(TempoMap.hasExtras(in: [entry]))
     }
@@ -92,7 +94,7 @@ extension TempoMapInternalTests {
     @Test
     func hasExtras_withoutExtras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let entry = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(!TempoMap.hasExtras(in: [entry]))
     }

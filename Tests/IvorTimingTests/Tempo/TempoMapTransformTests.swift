@@ -23,8 +23,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [0, 4])
@@ -66,13 +66,13 @@ extension TempoMapTransformTests {
         var beatTime10: BeatTime?
         var beatTime14: BeatTime?
 
-        map.forEach { entryID, beatTime, _, _ in
-            if entryID == entryID10 {
-                beatTime10 = beatTime
+        for entry in map {
+            if entry.entryID == entryID10 {
+                beatTime10 = entry.beatTime
             }
 
-            if entryID == entryID14 {
-                beatTime14 = beatTime
+            if entry.entryID == entryID14 {
+                beatTime14 = entry.beatTime
             }
         }
 
@@ -98,8 +98,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [1, 5])
@@ -115,8 +115,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes == [2])
@@ -144,8 +144,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [2, 4])
@@ -166,8 +166,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [2, 4])
@@ -185,8 +185,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes == [2])
@@ -207,8 +207,8 @@ extension TempoMapTransformTests {
 
         var beatTimesByID: [TempoMap.EntryID: BeatTime] = [:]
 
-        map.forEach { entryID, beatTime, _, _ in
-            beatTimesByID[entryID] = beatTime
+        for entry in map {
+            beatTimesByID[entry.entryID] = entry.beatTime
         }
 
         #expect(beatTimesByID[entryID1] == 0)
@@ -230,8 +230,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [0, 4])
@@ -254,9 +254,9 @@ extension TempoMapTransformTests {
 
         var phraseBeatTimes: [BeatTime] = []
 
-        map.forEach { entryID, beatTime, _, _ in
-            if entryID == phraseID1 || entryID == phraseID2 {
-                phraseBeatTimes.append(beatTime)
+        for entry in map {
+            if entry.entryID == phraseID1 || entry.entryID == phraseID2 {
+                phraseBeatTimes.append(entry.beatTime)
             }
         }
 
@@ -269,8 +269,8 @@ extension TempoMapTransformTests {
 
         var allBeatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            allBeatTimes.append(beatTime)
+        for entry in map {
+            allBeatTimes.append(entry.beatTime)
         }
 
         //
@@ -304,8 +304,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [0, 2])
@@ -323,8 +323,8 @@ extension TempoMapTransformTests {
 
         var beatTimes: [BeatTime] = []
 
-        map.forEach { _, beatTime, _, _ in
-            beatTimes.append(beatTime)
+        for entry in map {
+            beatTimes.append(entry.beatTime)
         }
 
         #expect(beatTimes.sorted() == [0, 2])

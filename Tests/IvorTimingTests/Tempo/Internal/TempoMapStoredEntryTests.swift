@@ -6,19 +6,19 @@ import Testing
 import XestiNumbers
 import XestiTools
 
-struct TempoMapEntryTests {
+struct TempoMapStoredEntryTests {
 }
 
 // MARK: -
 
-extension TempoMapEntryTests {
+extension TempoMapStoredEntryTests {
     @Test
     func beatTime() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let simple = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let extended = TempoMap.Entry(beatTime: BeatTime(2),
-                                      tempo: t120,
-                                      extras: Extras(elements: [Extra(name: "tag")]))
+        let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let extended = TempoMap.StoredEntry(beatTime: BeatTime(2),
+                                            tempo: t120,
+                                            extras: Extras(elements: [Extra(name: "tag")]))
 
         #expect(simple.beatTime == BeatTime(1))
         #expect(extended.beatTime == BeatTime(2))
@@ -27,14 +27,14 @@ extension TempoMapEntryTests {
     @Test
     func codable() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let simple = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let extended = TempoMap.Entry(beatTime: BeatTime(2),
-                                      tempo: t120,
-                                      extras: Extras(elements: [Extra(name: "tag")]))
+        let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let extended = TempoMap.StoredEntry(beatTime: BeatTime(2),
+                                            tempo: t120,
+                                            extras: Extras(elements: [Extra(name: "tag")]))
 
         for original in [simple, extended] {
             let data = try JSONEncoder().encode(original)
-            let decoded = try JSONDecoder().decode(TempoMap.Entry.self, from: data)
+            let decoded = try JSONDecoder().decode(TempoMap.StoredEntry.self, from: data)
 
             #expect(decoded == original)
         }
@@ -43,8 +43,8 @@ extension TempoMapEntryTests {
     @Test
     func comparable() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let earlier = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let later = TempoMap.Entry(beatTime: BeatTime(2), tempo: t120, extras: nil)
+        let earlier = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let later = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t120, extras: nil)
 
         #expect(earlier < later)
         #expect(!(later < earlier))
@@ -53,8 +53,8 @@ extension TempoMapEntryTests {
     @Test
     func entryID_defaultsToFreshIdentity() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let e2 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(e1.entryID != e2.entryID)
     }
@@ -63,7 +63,7 @@ extension TempoMapEntryTests {
     func entryID_explicit() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let entryID = TempoMap.EntryID()
-        let entry = TempoMap.Entry(entryID: entryID, beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let entry = TempoMap.StoredEntry(entryID: entryID, beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(entry.entryID == entryID)
     }
@@ -71,8 +71,8 @@ extension TempoMapEntryTests {
     @Test
     func equality() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let e2 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(e1 == e2)
     }
@@ -80,8 +80,8 @@ extension TempoMapEntryTests {
     @Test
     func equality_ignoresIdentity() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let e2 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(e1.entryID != e2.entryID)
         #expect(e1 == e2)
@@ -91,8 +91,8 @@ extension TempoMapEntryTests {
     func extras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let extrasValue = Extras(elements: [Extra(name: "tag")])
-        let simple = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let extended = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
+        let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let extended = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
 
         #expect(simple.extras == nil)
         #expect(extended.extras == extrasValue)
@@ -102,9 +102,9 @@ extension TempoMapEntryTests {
     func inequality() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90 = try #require(Tempo(uintValue: 90))
-        let e1 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let e2 = TempoMap.Entry(beatTime: BeatTime(2), tempo: t120, extras: nil)
-        let e3 = TempoMap.Entry(beatTime: BeatTime(1), tempo: t90, extras: nil)
+        let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let e2 = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t120, extras: nil)
+        let e3 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t90, extras: nil)
 
         #expect(e1 != e2)
         #expect(e1 != e3)
@@ -113,7 +113,7 @@ extension TempoMapEntryTests {
     @Test
     func init_emptyExtras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let entry = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: Extras())
+        let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: Extras())
 
         #expect(entry.extras == nil)
     }
@@ -121,7 +121,7 @@ extension TempoMapEntryTests {
     @Test
     func init_noExtras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
-        let entry = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(entry.extras == nil)
     }
@@ -130,7 +130,7 @@ extension TempoMapEntryTests {
     func init_withExtras() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let extrasValue = Extras(elements: [Extra(name: "tag")])
-        let entry = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
+        let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
 
         #expect(entry.extras == extrasValue)
     }
@@ -139,10 +139,10 @@ extension TempoMapEntryTests {
     func tempo() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90 = try #require(Tempo(uintValue: 90))
-        let simple = TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)
-        let extended = TempoMap.Entry(beatTime: BeatTime(1),
-                                      tempo: t90,
-                                      extras: Extras(elements: [Extra(name: "tag")]))
+        let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
+        let extended = TempoMap.StoredEntry(beatTime: BeatTime(1),
+                                            tempo: t90,
+                                            extras: Extras(elements: [Extra(name: "tag")]))
 
         #expect(simple.tempo == t120)
         #expect(extended.tempo == t90)

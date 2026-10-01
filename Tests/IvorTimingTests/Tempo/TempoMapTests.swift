@@ -34,16 +34,49 @@ extension TempoMapTests {
         // Simulates a document saved before `insert`'s dedup rule existed: nothing
         // about `Codable` itself enforces uniqueness, so two exact-duplicate entries
         // can land in `entries` directly, bypassing `insert`'s own guard.
-        tmap.entries = [TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil),
-                        TempoMap.Entry(beatTime: BeatTime(1), tempo: t120, extras: nil)]
+        tmap.entries = [TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil),
+                        TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)]
 
         let data = try JSONEncoder().encode(tmap)
         let decoded = try JSONDecoder().decode(TempoMap.self, from: data)
         var count = 0
 
-        decoded.forEach { _, _, _, _ in count += 1 }
+        for entry in decoded {
+            count += 1
+        }
 
         #expect(count == 1)
+    }
+
+    @Test
+    func collection_empty() {
+        let map = TempoMap()
+
+        #expect(map.isEmpty)
+        #expect(map.startIndex == map.endIndex)
+        #expect(map.first == nil)
+        #expect(map.last == nil)
+    }
+
+    @Test
+    func collection_iteratesEntriesInTimeOrder() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        var map = TempoMap()
+
+        let later = map.insert(beatTime: 2,
+                               tempo: t120)
+        let earlier = map.insert(beatTime: 1,
+                                 tempo: t90)
+
+        #expect(map.count == 2)
+        #expect(map.map(\.entryID) == [earlier.entryID, later.entryID])
+        #expect(map.map(\.beatTime) == [1, 2])
+        #expect(map.first?.tempo == t90)
+        #expect(map[map.index(after: map.startIndex)].tempo == t120)
+        #expect(map.index(map.startIndex, offsetBy: 2) == map.endIndex)
+        #expect(map.distance(from: map.endIndex, to: map.startIndex) == -2)
+        #expect(map.index(before: map.endIndex) == map.index(after: map.startIndex))
     }
 
     @Test
@@ -92,9 +125,9 @@ extension TempoMapTests {
         var visited: [(BeatTime, Tempo)] = []
         var ids: [TempoMap.EntryID] = []
 
-        tmap.forEach { entryID, beatTime, tempo, _ in
-            ids.append(entryID)
-            visited.append((beatTime, tempo))
+        for entry in tmap {
+            ids.append(entry.entryID)
+            visited.append((entry.beatTime, entry.tempo))
         }
 
         #expect(visited.count == 2)
@@ -125,8 +158,9 @@ extension TempoMapTests {
         let extras = Extras(elements: [Extra(name: "tag")])
         var tmap = TempoMap()
 
-        tmap.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
-        tmap.remove(beatTime: BeatTime(1), tempo: t120, extras: extras)
+        let inserted = tmap.insert(beatTime: BeatTime(1), tempo: t120, extras: extras)
+
+        tmap.remove(entryID: inserted.entryID)
 
         #expect(!tmap.hasExtras)
     }
@@ -171,6 +205,30 @@ extension TempoMapTests {
     }
 
     @Test
+    func last_empty() {
+        #expect(TempoMap().last == nil)
+    }
+
+    @Test
+    func last_returnsLastEntryInBeatTimeOrder() throws {
+        let t120   = try #require(Tempo(uintValue: 120))
+        let t90    = try #require(Tempo(uintValue: 90))
+        let extras = Extras(elements: [Extra(name: "tag")])
+        var tmap = TempoMap()
+
+        let later = tmap.insert(beatTime: BeatTime(2), tempo: t90, extras: extras)
+
+        tmap.insert(beatTime: BeatTime(1), tempo: t120)
+
+        let last = try #require(tmap.last)
+
+        #expect(last.entryID == later.entryID)
+        #expect(last.beatTime == BeatTime(2))
+        #expect(last.tempo == t90)
+        #expect(last.extras == extras)
+    }
+
+    @Test
     func merge() throws {
         let t120 = try #require(Tempo(uintValue: 120))
         let t90  = try #require(Tempo(uintValue: 90))
@@ -194,17 +252,17 @@ extension TempoMapTests {
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
 
-        tmap.forEach { entryID, beatTime, _, _ in
-            if beatTime == BeatTime(1) {
-                movedID = entryID
-            }
+        for entry in tmap where entry.beatTime == BeatTime(1) {
+            movedID = entry.entryID
         }
 
         let entryID = try #require(movedID)
         let newID = tmap.move(entryID: entryID, to: BeatTime(5))
         var beatTimes: [BeatTime] = []
 
-        tmap.forEach { _, beatTime, _, _ in beatTimes.append(beatTime) }
+        for entry in tmap {
+            beatTimes.append(entry.beatTime)
+        }
 
         #expect(newID == entryID)
         #expect(beatTimes == [BeatTime(5)])
@@ -222,11 +280,11 @@ extension TempoMapTests {
         var movingID: TempoMap.EntryID?
         var survivorID: TempoMap.EntryID?
 
-        tmap.forEach { entryID, beatTime, _, _ in
-            if beatTime == BeatTime(1) {
-                movingID = entryID
+        for entry in tmap {
+            if entry.beatTime == BeatTime(1) {
+                movingID = entry.entryID
             } else {
-                survivorID = entryID
+                survivorID = entry.entryID
             }
         }
 
@@ -239,7 +297,9 @@ extension TempoMapTests {
 
         var count = 0
 
-        tmap.forEach { _, _, _, _ in count += 1 }
+        for entry in tmap {
+            count += 1
+        }
 
         #expect(count == 1)
     }
@@ -259,8 +319,8 @@ extension TempoMapTests {
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
 
-        tmap.forEach { entryID, _, _, _ in
-            removedID = entryID
+        for entry in tmap {
+            removedID = entry.entryID
         }
 
         let entryID = try #require(removedID)
@@ -284,36 +344,30 @@ extension TempoMapTests {
     }
 
     @Test
-    func remove_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        var tmap = TempoMap()
-
-        let inserted = tmap.insert(beatTime: BeatTime(1), tempo: t120)
-        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t120)
-
-        #expect(removedID == inserted.entryID)
-        #expect(tmap.isEmpty)
-    }
-
-    @Test
-    func remove_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
-        var tmap = TempoMap()
-
-        tmap.insert(beatTime: BeatTime(1), tempo: t120)
-
-        let removedID = tmap.remove(beatTime: BeatTime(1), tempo: t90)
-
-        #expect(removedID == nil)
-        #expect(!tmap.isEmpty)
-    }
-
-    @Test
     func subscript_defaultWhenEmpty() {
         let tmap = TempoMap()
 
         #expect(tmap[BeatTime(5)] == .default)
+    }
+
+    @Test
+    func subscript_integerLiteral_isTime() throws {
+        let t120 = try #require(Tempo(uintValue: 120))
+        let t90  = try #require(Tempo(uintValue: 90))
+        var map = TempoMap()
+
+        map.insert(beatTime: 0,
+                   tempo: t90)
+        map.insert(beatTime: 1,
+                   tempo: t120)
+
+        //
+        // `1` must resolve to the beatTime subscript, not a position — positions are an opaque
+        // `Index` precisely so an integer literal can’t select them:
+        //
+        let value = map[1]
+
+        #expect(value == t120)
     }
 
     @Test
@@ -341,7 +395,9 @@ extension TempoMapTests {
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
         tmap.insert(beatTime: BeatTime(1), tempo: t90)
 
-        tmap.forEach { entryID, _, _, _ in ids.append(entryID) }
+        for entry in tmap {
+            ids.append(entry.entryID)
+        }
 
         // Editing the second entry back to `t120` makes it an exact duplicate
         // of the first, so it should be dropped rather than left in place.
@@ -352,7 +408,9 @@ extension TempoMapTests {
 
         var remaining: [TempoMap.EntryID] = []
 
-        tmap.forEach { entryID, _, _, _ in remaining.append(entryID) }
+        for entry in tmap {
+            remaining.append(entry.entryID)
+        }
 
         #expect(remaining == [ids.last])
     }
@@ -366,7 +424,9 @@ extension TempoMapTests {
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
 
-        tmap.forEach { entryID, _, _, _ in foundEntryID = entryID }
+        for entry in tmap {
+            foundEntryID = entry.entryID
+        }
 
         let result = try tmap.update(entryID: #require(foundEntryID), tempo: t90)
 

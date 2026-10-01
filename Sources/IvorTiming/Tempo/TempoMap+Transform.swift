@@ -46,10 +46,10 @@ extension TempoMap {
                                                                           direction: result.direction))
             else { throw Error.augmentFailure(entry.beatTime) }
 
-            entries[idx] = Entry(entryID: entry.entryID,
-                                 beatTime: newBeatTime,
-                                 tempo: entry.tempo,
-                                 extras: entry.extras)
+            entries[idx] = StoredEntry(entryID: entry.entryID,
+                                       beatTime: newBeatTime,
+                                       tempo: entry.tempo,
+                                       extras: entry.extras)
         }
 
         entries.sort()
@@ -95,10 +95,10 @@ extension TempoMap {
                                                                           direction: result.direction))
             else { throw Error.diminishFailure(entry.beatTime) }
 
-            entries[idx] = Entry(entryID: entry.entryID,
-                                 beatTime: newBeatTime,
-                                 tempo: entry.tempo,
-                                 extras: entry.extras)
+            entries[idx] = StoredEntry(entryID: entry.entryID,
+                                       beatTime: newBeatTime,
+                                       tempo: entry.tempo,
+                                       extras: entry.extras)
         }
 
         entries.sort()
@@ -125,10 +125,10 @@ extension TempoMap {
             guard let newBeatTime = entry.beatTime.moved(by: directedDuration)
             else { throw Error.moveFailure(entry.beatTime) }
 
-            entries[idx] = Entry(entryID: entry.entryID,
-                                 beatTime: newBeatTime,
-                                 tempo: entry.tempo,
-                                 extras: entry.extras)
+            entries[idx] = StoredEntry(entryID: entry.entryID,
+                                       beatTime: newBeatTime,
+                                       tempo: entry.tempo,
+                                       extras: entry.extras)
         }
 
         entries.sort()
@@ -153,10 +153,10 @@ extension TempoMap {
             guard entryIDs?.contains(entry.entryID) ?? true
             else { continue }
 
-            entries[idx] = Entry(entryID: entry.entryID,
-                                 beatTime: quantizer.quantize(entry.beatTime),
-                                 tempo: entry.tempo,
-                                 extras: entry.extras)
+            entries[idx] = StoredEntry(entryID: entry.entryID,
+                                       beatTime: quantizer.quantize(entry.beatTime),
+                                       tempo: entry.tempo,
+                                       extras: entry.extras)
         }
 
         entries.sort()
@@ -193,10 +193,10 @@ extension TempoMap {
                   let newBeatTime = loBeatTime.moved(by: dirDur)
             else { throw Error.reverseFailure(entry.beatTime) }
 
-            entries[idx] = Entry(entryID: entry.entryID,
-                                 beatTime: newBeatTime,
-                                 tempo: entry.tempo,
-                                 extras: entry.extras)
+            entries[idx] = StoredEntry(entryID: entry.entryID,
+                                       beatTime: newBeatTime,
+                                       tempo: entry.tempo,
+                                       extras: entry.extras)
         }
 
         entries.sort()

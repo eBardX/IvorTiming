@@ -14,6 +14,8 @@ extension WallTime {
     /// - Parameter factor:  The scaling factor.
     ///
     /// - Returns:  The product of `time` and `factor`.
+    ///
+    /// - Precondition: `factor` must not be negative, and the product must be representable.
     public static func * (time: Self,
                           factor: Number) -> Self {
         WallTime(seconds: time.doubleValue * factor.doubleValue)
@@ -23,6 +25,8 @@ extension WallTime {
     ///
     /// - Parameter time:    The wall time to update.
     /// - Parameter factor:  The scaling factor.
+    ///
+    /// - Precondition: `factor` must not be negative, and the product must be representable.
     public static func *= (time: inout Self,
                            factor: Number) {
         time = time * factor

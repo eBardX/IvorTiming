@@ -56,6 +56,11 @@ extension WallDurationTests {
     }
 
     @Test
+    func divided_negativeFactor_returnsNil() {
+        #expect(WallDuration(2).divided(by: -1) == nil)
+    }
+
+    @Test
     func doubleValue() {
         #expect(WallDuration(0).doubleValue == 0)
         #expect(WallDuration(1_500_000).doubleValue == 1.5)
@@ -77,20 +82,75 @@ extension WallDurationTests {
     }
 
     @Test
+    func init_doubleValue() {
+        #expect(WallDuration(doubleValue: 0) == WallDuration(0))
+        #expect(WallDuration(doubleValue: -0.0) == WallDuration(0))
+        #expect(WallDuration(doubleValue: 1.5) == WallDuration(1_500_000))
+    }
+
+    @Test
+    func init_doubleValue_invalid_returnsNil() {
+        #expect(WallDuration(doubleValue: -1) == nil)
+        #expect(WallDuration(doubleValue: -0.000001) == nil)
+        #expect(WallDuration(doubleValue: .infinity) == nil)
+        #expect(WallDuration(doubleValue: -.infinity) == nil)
+        #expect(WallDuration(doubleValue: .nan) == nil)
+        #expect(WallDuration(doubleValue: 0x1p64 / 1_000_000) == nil)
+    }
+
+    @Test
+    func init_doubleValue_roundsToMicrosecond() {
+        #expect(WallDuration(doubleValue: 1.0000004) == WallDuration(1_000_000))
+        #expect(WallDuration(doubleValue: 1.0000006) == WallDuration(1_000_001))
+    }
+
+    @Test
+    func init_doubleValue_roundsTiesToEven() {
+        #expect(WallDuration(doubleValue: 1.0 / 128) == WallDuration(7_812))     // 7,812.5 µs
+        #expect(WallDuration(doubleValue: 3.0 / 128) == WallDuration(23_438))    // 23,437.5 µs
+    }
+
+    @Test
+    func init_numberValue() {
+        #expect(WallDuration(numberValue: 0) == WallDuration(0))
+        #expect(WallDuration(numberValue: Number(numerator: 3, denominator: 2)) == WallDuration(1_500_000))
+        #expect(WallDuration(numberValue: Number(numerator: 1_001, denominator: 30_000)) == WallDuration(33_367))
+        #expect(WallDuration(numberValue: Number(1.5)) == WallDuration(1_500_000))
+        #expect(WallDuration(numberValue: Number(1.000001)) == WallDuration(1_000_001))
+    }
+
+    @Test
+    func init_numberValue_invalid_returnsNil() {
+        #expect(WallDuration(numberValue: -1) == nil)
+        #expect(WallDuration(numberValue: Number(numerator: -1, denominator: 1_000_000)) == nil)
+        #expect(WallDuration(numberValue: .positiveInfinity) == nil)
+        #expect(WallDuration(numberValue: .negativeInfinity) == nil)
+        #expect(WallDuration(numberValue: .nan) == nil)
+        #expect(WallDuration(numberValue: Number(UInt.max) / 1_000_000 + Number(numerator: 1, denominator: 1_000_000)) == nil)
+    }
+
+    @Test
+    func init_numberValue_largest() {
+        #expect(WallDuration(numberValue: Number(UInt.max) / 1_000_000) == WallDuration(uintValue: .max))
+    }
+
+    @Test
+    func init_numberValue_roundsTiesToEven() {
+        #expect(WallDuration(numberValue: Number(numerator: 1, denominator: 2_000_000)) == WallDuration(0))
+        #expect(WallDuration(numberValue: Number(numerator: 3, denominator: 2_000_000)) == WallDuration(2))
+    }
+
+    @Test
     func init_seconds() {
         #expect(WallDuration(seconds: 0) == WallDuration(0))
         #expect(WallDuration(seconds: 1.5) == WallDuration(1_500_000))
     }
 
     @Test
-    func init_seconds_clampsNegative() {
-        #expect(WallDuration(seconds: -1) == .zero)
-    }
-
-    @Test
-    func init_seconds_roundsToMicrosecond() {
-        #expect(WallDuration(seconds: 1.0000004) == WallDuration(1_000_000))
-        #expect(WallDuration(seconds: 1.0000006) == WallDuration(1_000_001))
+    func init_seconds_invalid_traps() async {
+        await #expect(processExitsWith: .failure) {
+            _ = WallDuration(seconds: -1)
+        }
     }
 
     @Test
@@ -111,6 +171,11 @@ extension WallDurationTests {
     }
 
     @Test
+    func multiplied_negativeFactor_returnsNil() {
+        #expect(WallDuration(2).multiplied(by: -1) == nil)
+    }
+
+    @Test
     func numberValue() {
         #expect(WallDuration(1_500_000).numberValue == Number(numerator: 3, denominator: 2))
         #expect(WallDuration(1_000_001).numberValue == Number(numerator: 1_000_001, denominator: 1_000_000))
@@ -124,6 +189,11 @@ extension WallDurationTests {
         #expect(WallDuration(1_050_000).plain == "1.05")
         #expect(WallDuration(1_005_000).plain == "1.005")
         #expect(WallDuration(1_000_001).plain == "1.000001")
+    }
+
+    @Test
+    func plain_negative_returnsNil() {
+        #expect(WallDuration(plain: "-1") == nil)
     }
 
     @Test

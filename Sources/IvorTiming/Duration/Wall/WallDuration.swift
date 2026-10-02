@@ -10,6 +10,37 @@ public struct WallDuration {
 
     // MARK: Public Initializers
 
+    /// Creates a ``WallDuration`` from a number of seconds, rounded to the nearest microsecond.
+    ///
+    /// A value exactly halfway between two microseconds rounds to the even one.
+    ///
+    /// - Parameter doubleValue:    The number of seconds.
+    ///
+    /// - Returns:  A new ``WallDuration``, or `nil` if `doubleValue` is negative, infinite, or NaN,
+    ///             or is too large to represent.
+    public init?(doubleValue: Double) {
+        guard let uintValue = UInt(microsecondsFromSeconds: doubleValue)
+        else { return nil }
+
+        self.uintValue = uintValue
+    }
+
+    /// Creates a ``WallDuration`` from a rational number of seconds, rounded to the nearest
+    /// microsecond.
+    ///
+    /// A value exactly halfway between two microseconds rounds to the even one.
+    ///
+    /// - Parameter numberValue:    The number of seconds.
+    ///
+    /// - Returns:  A new ``WallDuration``, or `nil` if `numberValue` is negative or not rational, or
+    ///             is too large to represent.
+    public init?(numberValue: Number) {
+        guard let uintValue = UInt(microsecondsFromSeconds: numberValue)
+        else { return nil }
+
+        self.uintValue = uintValue
+    }
+
     /// Creates a wall duration by parsing its plain string representation, returning `nil` if the
     /// string cannot be parsed or is out of range.
     ///
@@ -19,7 +50,7 @@ public struct WallDuration {
         guard let numberValue = try? Self.plainParseStrategy.parse(plain)
         else { return nil }
 
-        self.init(seconds: numberValue.doubleValue)
+        self.init(numberValue: numberValue)
     }
 
     /// Creates a ``WallDuration`` from a microsecond count.
@@ -39,9 +70,15 @@ public struct WallDuration {
 
     // MARK: Internal Initializers
 
-    // Rounds to the nearest microsecond.
+    //
+    // For internal callers whose seconds are valid by construction. Rounds as
+    // `init?(doubleValue:)` does, but traps rather than returning `nil`.
+    //
     internal init(seconds: Double) {
-        self.init(uintValue: UInt((max(seconds, 0) * 1_000_000).rounded()))!    // swiftlint:disable:this force_unwrapping
+        guard let value = Self(doubleValue: seconds)
+        else { preconditionFailure("Invalid wall duration: \(seconds) seconds") }
+
+        self = value
     }
 }
 
@@ -131,7 +168,7 @@ extension WallDuration: DurationProtocol {
         guard !factor.isZero
         else { return nil }
 
-        return Self(seconds: doubleValue / factor.doubleValue)
+        return Self(doubleValue: doubleValue / factor.doubleValue)
     }
 
     /// Returns this wall duration multiplied by a factor.
@@ -141,7 +178,7 @@ extension WallDuration: DurationProtocol {
     /// - Returns:  The product, or `nil` if the result is not a valid wall
     ///             duration.
     public func multiplied(by factor: Number) -> Self? {
-        Self(seconds: doubleValue * factor.doubleValue)
+        Self(doubleValue: doubleValue * factor.doubleValue)
     }
 
     /// Returns the result of subtracting another wall duration from this

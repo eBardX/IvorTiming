@@ -14,6 +14,8 @@ extension WallDuration {
     /// - Parameter factor:  The scaling factor.
     ///
     /// - Returns:  The product of `dur` and `factor`.
+    ///
+    /// - Precondition: `factor` must not be negative, and the product must be representable.
     public static func * (dur: Self,
                           factor: Number) -> Self {
         WallDuration(seconds: dur.doubleValue * factor.doubleValue)
@@ -23,6 +25,8 @@ extension WallDuration {
     ///
     /// - Parameter dur:     The wall duration to update.
     /// - Parameter factor:  The scaling factor.
+    ///
+    /// - Precondition: `factor` must not be negative, and the product must be representable.
     public static func *= (dur: inout Self,
                            factor: Number) {
         dur = dur * factor

@@ -28,6 +28,13 @@ extension WallDurationArithmeticTests {
     }
 
     @Test
+    func scaling_negativeFactor_traps() async {
+        await #expect(processExitsWith: .failure) {
+            _ = WallDuration(2) * Number(-1)
+        }
+    }
+
+    @Test
     func scalingInPlace() {
         var dur = WallDuration(2)
 

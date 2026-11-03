@@ -312,6 +312,74 @@ extension TempoMapTransformTests {
     }
 
     @Test
+    func reverse_rampPlaysAsForwardRamp() throws {
+        //
+        // A reversed accelerando is a ritardando, played with the same curve as one written
+        // forwards: 60→120 over 0–4, reversed, must read at every beat exactly like 120→60
+        // over 0–4. It is deliberately *not* the original curve run backwards in time.
+        //
+        let t60 = try #require(Tempo(uintValue: 60))
+        let t120 = try #require(Tempo(uintValue: 120))
+
+        var reversed = TempoMap()
+
+        reversed.insert(beatTime: 0, tempo: t60)
+        reversed.insert(beatTime: 4, tempo: t120)
+
+        try reversed.reverse()
+
+        var forward = TempoMap()
+
+        forward.insert(beatTime: 0, tempo: t120)
+        forward.insert(beatTime: 4, tempo: t60)
+
+        let beatTimes: [BeatTime] = [0, 1, 2, 3, 4]
+
+        #expect(beatTimes.map { reversed[$0] } == beatTimes.map { forward[$0] })
+
+        //
+        // The ritardando eases in, as the accelerando did: 105 at beat 2, not the 75 that the
+        // original curve run backwards would give.
+        //
+        #expect(reversed[2] == Tempo(uintValue: 105))
+    }
+
+    @Test
+    func reverse_stepPairReversesWithItsSegments() throws {
+        //
+        // A step is two entries at the same beat time: the old tempo, then the new
+        // one (the last entry at a beat time wins). Reversing 60 for 0–4, 120 for
+        // 4–8 must give 120 for 0–4, 60 for 4–8: the pair at 4 swaps order, and
+        // both segments stay flat rather than turning into ramps.
+        //
+        let t60 = try #require(Tempo(uintValue: 60))
+        let t120 = try #require(Tempo(uintValue: 120))
+
+        var map = TempoMap()
+
+        map.insert(beatTime: 0, tempo: t60)
+        map.insert(beatTime: 4, tempo: t60)
+        map.insert(beatTime: 4, tempo: t120)
+        map.insert(beatTime: 8, tempo: t120)
+
+        try map.reverse()
+
+        var beatTimes: [BeatTime] = []
+        var tempos: [Tempo] = []
+
+        for entry in map {
+            beatTimes.append(entry.beatTime)
+            tempos.append(entry.tempo)
+        }
+
+        #expect(beatTimes == [0, 4, 4, 8])
+        #expect(tempos == [t120, t120, t60, t60])
+        #expect(map[2] == t120)
+        #expect(map[4] == t60)
+        #expect(map[6] == t60)
+    }
+
+    @Test
     func reverse_validAnchorDoesNotThrow() throws {
         var map = TempoMap()
         let t120 = try #require(Tempo(uintValue: 120))

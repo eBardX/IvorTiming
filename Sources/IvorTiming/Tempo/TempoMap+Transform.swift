@@ -164,6 +164,15 @@ extension TempoMap {
 
     /// Reverses the order of entries within a beat-time range.
     ///
+    /// Each entry’s beat time is mirrored within the range, and entries that share a beat time
+    /// swap order, so a step keeps its flat segments on either side.
+    ///
+    /// A ramp is reversed by its endpoints only. Its curve isn’t flipped: the reversed ramp is
+    /// interpolated just as a ramp written in that direction would be. That’s how a performer
+    /// reads a score played backwards. An accelerando from 60 to 120 becomes a ritardando from
+    /// 120 to 60, played as any ritardando from 120 to 60 is played, not as the accelerando run
+    /// backwards in time.
+    ///
     /// - Parameter beatTimeRange:   The beat-time range to mirror entry beat times around. `nil`
     ///                              resolves to the map’s own beat-time range, or — when
     ///                              `entryIDs` is non-`nil` — the selected entries’ own range.
@@ -197,6 +206,19 @@ extension TempoMap {
                                        beatTime: newBeatTime,
                                        tempo: entry.tempo,
                                        extras: entry.extras)
+        }
+
+        //
+        // Mirroring reverses the selected entries' order in beat time, so reverse their order in the
+        // array too. Entries that share a beat time (a step: the old value, then the new) must swap
+        // as well, or the step comes out backwards. The stable sort then merges them back in
+        // among any unselected entries.
+        //
+        let selectedIndices = entries.indices.filter { entryIDs?.contains(entries[$0].entryID) ?? true }
+        let reversedEntries = selectedIndices.reversed().map { entries[$0] }
+
+        for (idx, entry) in zip(selectedIndices, reversedEntries) {
+            entries[idx] = entry
         }
 
         entries.sort()

@@ -5,14 +5,18 @@ public import XestiTools
 
 private import Foundation
 
-/// A point in musical beat time, measured in beats from time zero.
+/// A point in musical beat time, measured in whole notes from time zero.
+///
+/// A beat time counts whole notes, not the beats of a meter: a quarter note after time zero is
+/// 1/4, and a triplet eighth note is 1/12. The meter never changes beat time; only a ``Tempo``
+/// relates whole notes to the clock.
 public struct BeatTime {
 
     // MARK: Public Initializers
 
     /// Creates a ``BeatTime`` from a rational number value.
     ///
-    /// - Parameter numberValue:    The rational number of beats.
+    /// - Parameter numberValue:    The rational number of whole notes.
     ///
     /// - Returns:  A new ``BeatTime``, or `nil` if `numberValue` is not a valid
     ///             beat time.
@@ -37,7 +41,7 @@ public struct BeatTime {
 
     // MARK: Public Instance Properties
 
-    /// The rational number of beats representing this time.
+    /// The rational number of whole notes from time zero representing this time.
     public let numberValue: Number
 }
 

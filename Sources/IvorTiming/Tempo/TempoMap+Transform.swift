@@ -224,6 +224,63 @@ extension TempoMap {
         entries.sort()
     }
 
+    /// Multiplies the unit of every tempo from a beat time onward by a factor, keeping each rate.
+    ///
+    /// Use this after augmenting or diminishing the music from `anchor` by `factor`, to keep its
+    /// sound: each tempo keeps its rate, and its speed in whole notes per minute scales with the
+    /// music. For example, ♪ = 240 becomes ♩ = 240 when the music is augmented by 2.
+    ///
+    /// Nothing before `anchor` changes speed. Unless `anchor` is zero, an unscaled entry is first
+    /// inserted at `anchor`, holding the tempo the music reaches there (the end of any ramp that
+    /// runs into it). It comes before any entry already at `anchor`, so the speed steps there.
+    /// Then every other entry at or after `anchor` has its unit scaled. If no entry was at
+    /// `anchor`, a scaled entry holding the tempo in effect there is inserted as well. That
+    /// includes ``defaultTempo``, when this tempo map is empty.
+    ///
+    /// Inserting an entry inside a ramp splits it. The first part keeps its exact shape; the
+    /// second becomes a fresh ease-in from the speed at `anchor` to the ramp’s end, which is
+    /// close to the original but not identical.
+    ///
+    /// - Parameter factor:   The factor to multiply each unit by.
+    /// - Parameter anchor:   The beat time from which units are scaled.
+    ///
+    /// - Precondition: `factor` is a positive rational number.
+    public mutating func scaleUnits(by factor: Number,
+                                    from anchor: BeatTime) {
+        precondition(factor.isRational && factor.isPositive,
+                     "Invalid unit scaling factor: \(factor)")
+
+        guard factor != 1
+        else { return }
+
+        let firstIndex = entries.firstIndex { $0.beatTime >= anchor } ?? entries.endIndex
+        let hasEntryAtAnchor = firstIndex < entries.endIndex && entries[firstIndex].beatTime == anchor
+        let arrivingTempo = hasEntryAtAnchor ? entries[firstIndex].tempo : self[anchor]
+
+        var scaledEntries = Array(entries[..<firstIndex])
+
+        if anchor != .zero {
+            scaledEntries.append(StoredEntry(beatTime: anchor,
+                                             tempo: arrivingTempo,
+                                             extras: nil))
+        }
+
+        if !hasEntryAtAnchor {
+            scaledEntries.append(StoredEntry(beatTime: anchor,
+                                             tempo: _scaled(arrivingTempo, by: factor),
+                                             extras: nil))
+        }
+
+        for entry in entries[firstIndex...] {
+            scaledEntries.append(StoredEntry(entryID: entry.entryID,
+                                             beatTime: entry.beatTime,
+                                             tempo: _scaled(entry.tempo, by: factor),
+                                             extras: entry.extras))
+        }
+
+        entries = scaledEntries
+    }
+
     // MARK: Private Instance Methods
 
     //
@@ -258,6 +315,14 @@ extension TempoMap {
         else { throw Error.invalidAnchor }
 
         return anchorRange
+    }
+
+    private func _scaled(_ tempo: Tempo,
+                         by factor: Number) -> Tempo {
+        guard let scaled = tempo.scaled(unitBy: factor)
+        else { preconditionFailure("Unable to scale tempo unit: \(tempo) by \(factor)") }
+
+        return scaled
     }
 
     //

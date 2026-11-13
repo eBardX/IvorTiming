@@ -107,15 +107,15 @@ extension WallTimeTests {
     }
 
     @Test
-    func init_doubleValue_roundsToMicrosecond() {
-        #expect(WallTime(doubleValue: 1.0000004) == WallTime(1_000_000))
-        #expect(WallTime(doubleValue: 1.0000006) == WallTime(1_000_001))
-    }
-
-    @Test
     func init_doubleValue_roundsTiesToEven() {
         #expect(WallTime(doubleValue: 1.0 / 128) == WallTime(7_812))     // 7,812.5 µs
         #expect(WallTime(doubleValue: 3.0 / 128) == WallTime(23_438))    // 23,437.5 µs
+    }
+
+    @Test
+    func init_doubleValue_roundsToMicrosecond() {
+        #expect(WallTime(doubleValue: 1.0000004) == WallTime(1_000_000))
+        #expect(WallTime(doubleValue: 1.0000006) == WallTime(1_000_001))
     }
 
     @Test

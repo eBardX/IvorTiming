@@ -8,6 +8,10 @@ private import XestiTools
 /// Create a `TimeConverter` from a ``TempoMap`` and use it to convert times.
 /// The converter captures the tempo map’s state at the moment of creation and
 /// is unaffected by subsequent changes to the source map.
+///
+/// At a steady tempo, a beat time in whole notes lasts its length × 60 /
+/// ``Tempo/numberValue`` seconds. At ♩ = 60 (15 whole notes per minute), for
+/// example, a whole note lasts 4 seconds.
 public struct TimeConverter {
 
     // MARK: Public Initializers
@@ -47,10 +51,10 @@ extension TimeConverter {
     /// - Returns:  The ``BeatTime`` corresponding to `wallTime`.
     public func beatTime(at wallTime: WallTime) -> BeatTime {
         guard !entries.isEmpty
-        else { return BeatTime(wallTime.numberValue * (defaultTempo.numberValue / Tempo.default.numberValue)) }
+        else { return BeatTime(wallTime.numberValue * (defaultTempo.numberValue / 60)) }
 
         if wallTime < entries[0].wallTime {
-            return BeatTime(wallTime.numberValue * entries[0].tempo.numberValue / Tempo.default.numberValue)
+            return BeatTime(wallTime.numberValue * entries[0].tempo.numberValue / 60)
         }
 
         let entry = entries[floorIndex(for: wallTime)]
@@ -81,10 +85,10 @@ extension TimeConverter {
     /// - Returns:  The ``WallTime`` corresponding to `beatTime`.
     public func wallTime(at beatTime: BeatTime) -> WallTime {
         guard !entries.isEmpty
-        else { return WallTime(seconds: (beatTime.numberValue * (Tempo.default.numberValue / defaultTempo.numberValue)).doubleValue) }
+        else { return WallTime(seconds: (beatTime.numberValue * (60 / defaultTempo.numberValue)).doubleValue) }
 
         if beatTime < entries[0].beatTime {
-            return WallTime(seconds: (beatTime.numberValue * Tempo.default.numberValue / entries[0].tempo.numberValue).doubleValue)
+            return WallTime(seconds: (beatTime.numberValue * 60 / entries[0].tempo.numberValue).doubleValue)
         }
 
         let entry = entries[floorIndex(for: beatTime)]

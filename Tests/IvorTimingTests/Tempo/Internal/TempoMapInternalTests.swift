@@ -17,9 +17,9 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func deduplicated_keepsFirstOccurrence() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func deduplicated_keepsFirstOccurrence() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         let first = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let duplicate = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let distinct = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t90, extras: nil)
@@ -32,7 +32,7 @@ extension TempoMapInternalTests {
 
     @Test
     func firstIndex_entryID_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -55,8 +55,8 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func firstIndex_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func firstIndex_found() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -65,8 +65,8 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func firstIndex_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func firstIndex_notFound() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -82,8 +82,8 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func hasExtras_withExtras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func hasExtras_withExtras() {
+        let t120 = Tempo(120)
         let entry = TempoMap.StoredEntry(beatTime: BeatTime(1),
                                          tempo: t120,
                                          extras: Extras(elements: [Extra(name: "tag")]))
@@ -92,8 +92,8 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func hasExtras_withoutExtras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func hasExtras_withoutExtras() {
+        let t120 = Tempo(120)
         let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(!TempoMap.hasExtras(in: [entry]))
@@ -107,8 +107,8 @@ extension TempoMapInternalTests {
     }
 
     @Test
-    func insertionIndex_middle() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func insertionIndex_middle() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)

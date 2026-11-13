@@ -4,14 +4,17 @@ public import XestiNumbers
 
 private import Foundation
 
-/// A non-negative duration measured in musical beats.
+/// A non-negative duration in musical beat time, measured in whole notes.
+///
+/// A beat duration counts whole notes, not the beats of a meter: a quarter note is 1/4, a dotted
+/// eighth note 3/16, and a triplet eighth note 1/12.
 public struct BeatDuration {
 
     // MARK: Public Initializers
 
     /// Creates a ``BeatDuration`` from a rational number value.
     ///
-    /// - Parameter numberValue:    The rational number of beats.
+    /// - Parameter numberValue:    The rational number of whole notes.
     ///
     /// - Returns:  A new ``BeatDuration``, or `nil` if `numberValue` is not
     ///             a valid beat duration.
@@ -36,7 +39,7 @@ public struct BeatDuration {
 
     // MARK: Public Instance Properties
 
-    /// The rational number of beats representing this duration.
+    /// The rational number of whole notes representing this duration.
     public let numberValue: Number
 }
 

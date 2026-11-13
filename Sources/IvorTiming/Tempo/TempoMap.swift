@@ -2,6 +2,8 @@
 
 public import XestiTools
 
+private import XestiNumbers
+
 /// A beat-time–indexed map of tempos.
 public struct TempoMap {
 
@@ -10,7 +12,7 @@ public struct TempoMap {
     /// Creates a new, empty tempo map with the given default tempo.
     ///
     /// - Parameter defaultTempo:   The tempo used when the tempo map is empty.
-    ///                             Defaults to `.default` (60 BPM).
+    ///                             Defaults to `.default` (♩ = 60).
     public init(defaultTempo: Tempo = .default) {
         self.defaultTempo = defaultTempo
         self.entries = []
@@ -39,6 +41,12 @@ extension TempoMap {
 
     /// Returns the interpolated tempo in effect at the given beat time.
     ///
+    /// Between two entries, the speed follows an ease-in curve: with starting and ending speeds
+    /// *s* and *e* (each a tempo’s ``Tempo/numberValue``), the speed at fraction *f* of the way
+    /// from one entry to the next is *s* + (*e* − *s*)·*f*². It’s computed exactly, and returned
+    /// in the unit of the entry the ramp starts from. For example, halfway from ♩. = 90 to
+    /// ♪ = 300, the speed is 555/16 whole notes per minute, returned as ♩. = 92½.
+    ///
     /// - Parameter beatTime:   The beat time at which to query the tempo.
     ///
     /// - Returns:  The ``Tempo`` value in effect at `beatTime`, or
@@ -56,14 +64,16 @@ extension TempoMap {
         let startEntry = entries[idx - 1]
         let endEntry = entries[idx]
 
-        let fraction = beatTime.fraction(from: startEntry.beatTime,
-                                         through: endEntry.beatTime)
+        let fraction = (beatTime - startEntry.beatTime).numberValue
+            / (endEntry.beatTime - startEntry.beatTime).numberValue
 
-        let rawStart = Int(startEntry.tempo.uintValue)
-        let rawEnd = Int(endEntry.tempo.uintValue)
-        let offset = Int((Double(rawEnd - rawStart) * fraction * fraction).rounded())
+        let startSpeed = startEntry.tempo.numberValue
+        let endSpeed = endEntry.tempo.numberValue
+        let speed = startSpeed + (endSpeed - startSpeed) * fraction * fraction
+        let unit = startEntry.tempo.unit
 
-        return Tempo(UInt(Swift.max(1, rawStart + offset)))
+        return Tempo(uncheckedRate: speed / unit.numberValue,
+                     unit: unit)
     }
 
     // MARK: Public Instance Methods

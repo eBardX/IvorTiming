@@ -99,15 +99,15 @@ extension WallDurationTests {
     }
 
     @Test
-    func init_doubleValue_roundsToMicrosecond() {
-        #expect(WallDuration(doubleValue: 1.0000004) == WallDuration(1_000_000))
-        #expect(WallDuration(doubleValue: 1.0000006) == WallDuration(1_000_001))
-    }
-
-    @Test
     func init_doubleValue_roundsTiesToEven() {
         #expect(WallDuration(doubleValue: 1.0 / 128) == WallDuration(7_812))     // 7,812.5 µs
         #expect(WallDuration(doubleValue: 3.0 / 128) == WallDuration(23_438))    // 23,437.5 µs
+    }
+
+    @Test
+    func init_doubleValue_roundsToMicrosecond() {
+        #expect(WallDuration(doubleValue: 1.0000004) == WallDuration(1_000_000))
+        #expect(WallDuration(doubleValue: 1.0000006) == WallDuration(1_000_001))
     }
 
     @Test

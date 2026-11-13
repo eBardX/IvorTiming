@@ -12,19 +12,27 @@ struct TempoFormatStyleTests {
 
 extension TempoFormatStyleTests {
     @Test
-    func format() throws {
-        let tempo = try #require(Tempo(uintValue: 120))
-        let style = Tempo.FormatStyle(locale: Locale(identifier: "en_US"))
-        let plain = style.format(tempo).characters.reduce(into: "") { $0.append($1) }
-
-        #expect(plain == "120")
+    func format() {
+        #expect(formatRate(Tempo(120)) == "120")
     }
 
     @Test
-    func formatted() throws {
-        let tempo = try #require(Tempo(uintValue: 120))
+    func format_omitsUnit() {
+        #expect(formatRate(dottedQuarter(90)) == "90")
+    }
 
-        #expect(!tempo.formatted().characters.isEmpty)
+    @Test
+    func format_roundsHalvesUp() throws {
+        #expect(try formatRate(#require(Tempo(rate: frac(200, 3), unit: dur(3, 8)))) == "67")
+        #expect(try formatRate(#require(Tempo(rate: frac(135, 2)))) == "68")
+        #expect(try formatRate(#require(Tempo(rate: frac(133, 2)))) == "67")
+        #expect(try formatRate(#require(Tempo(rate: frac(661, 10)))) == "66")
+        #expect(formatRate(dottedQuarter(67)) == "67")
+    }
+
+    @Test
+    func formatted() {
+        #expect(!Tempo(120).formatted().characters.isEmpty)
     }
 
     @Test

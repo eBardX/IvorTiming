@@ -14,7 +14,7 @@ struct TempoMapTests {
 extension TempoMapTests {
     @Test
     func codable() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var original = TempoMap()
 
         original.insert(beatTime: BeatTime(1), tempo: t120)
@@ -28,7 +28,7 @@ extension TempoMapTests {
 
     @Test
     func codable_decodeDeduplicatesLegacyDuplicates() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         // Simulates a document saved before `insert`'s dedup rule existed: nothing
@@ -41,7 +41,7 @@ extension TempoMapTests {
         let decoded = try JSONDecoder().decode(TempoMap.self, from: data)
         var count = 0
 
-        for entry in decoded {
+        for _ in decoded {
             count += 1
         }
 
@@ -59,9 +59,9 @@ extension TempoMapTests {
     }
 
     @Test
-    func collection_iteratesEntriesInTimeOrder() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func collection_iteratesEntriesInTimeOrder() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var map = TempoMap()
 
         let later = map.insert(beatTime: 2,
@@ -87,17 +87,17 @@ extension TempoMapTests {
     }
 
     @Test
-    func defaultTempo_override() throws {
-        let t90  = try #require(Tempo(uintValue: 90))
+    func defaultTempo_override() {
+        let t90  = Tempo(90)
         let tmap = TempoMap(defaultTempo: t90)
 
         #expect(tmap.defaultTempo == t90)
     }
 
     @Test
-    func equality() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func equality() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap1 = TempoMap()
         var tmap2 = TempoMap()
         var tmap3 = TempoMap()
@@ -114,9 +114,9 @@ extension TempoMapTests {
     }
 
     @Test
-    func forEach() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func forEach() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -139,8 +139,8 @@ extension TempoMapTests {
     }
 
     @Test
-    func hasExtras() throws {
-        let t120   = try #require(Tempo(uintValue: 120))
+    func hasExtras() {
+        let t120   = Tempo(120)
         let extras = Extras(elements: [Extra(name: "tag")])
         var with = TempoMap()
         var without = TempoMap()
@@ -153,8 +153,8 @@ extension TempoMapTests {
     }
 
     @Test
-    func hasExtras_updatedOnRemove() throws {
-        let t120   = try #require(Tempo(uintValue: 120))
+    func hasExtras_updatedOnRemove() {
+        let t120   = Tempo(120)
         let extras = Extras(elements: [Extra(name: "tag")])
         var tmap = TempoMap()
 
@@ -166,8 +166,8 @@ extension TempoMapTests {
     }
 
     @Test
-    func insert_duplicate() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func insert_duplicate() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         let first = tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -179,9 +179,9 @@ extension TempoMapTests {
     }
 
     @Test
-    func insert_new() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func insert_new() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap = TempoMap()
 
         let first = tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -211,8 +211,8 @@ extension TempoMapTests {
 
     @Test
     func last_returnsLastEntryInBeatTimeOrder() throws {
-        let t120   = try #require(Tempo(uintValue: 120))
-        let t90    = try #require(Tempo(uintValue: 90))
+        let t120   = Tempo(120)
+        let t90    = Tempo(90)
         let extras = Extras(elements: [Extra(name: "tag")])
         var tmap = TempoMap()
 
@@ -229,9 +229,9 @@ extension TempoMapTests {
     }
 
     @Test
-    func merge() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func merge() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap = TempoMap()
         var other = TempoMap()
 
@@ -246,7 +246,7 @@ extension TempoMapTests {
 
     @Test
     func move_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var tmap = TempoMap()
         var movedID: TempoMap.EntryID?
 
@@ -271,7 +271,7 @@ extension TempoMapTests {
 
     @Test
     func move_mergesIntoExistingDuplicate() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -297,7 +297,7 @@ extension TempoMapTests {
 
         var count = 0
 
-        for entry in tmap {
+        for _ in tmap {
             count += 1
         }
 
@@ -313,7 +313,7 @@ extension TempoMapTests {
 
     @Test
     func remove_entryID_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         var tmap = TempoMap()
         var removedID: TempoMap.EntryID?
 
@@ -331,8 +331,8 @@ extension TempoMapTests {
     }
 
     @Test
-    func remove_entryID_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func remove_entryID_notFound() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(1), tempo: t120)
@@ -351,9 +351,9 @@ extension TempoMapTests {
     }
 
     @Test
-    func subscript_integerLiteral_isTime() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+    func subscript_integerLiteral_isTime() {
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var map = TempoMap()
 
         map.insert(beatTime: 0,
@@ -371,10 +371,10 @@ extension TempoMapTests {
     }
 
     @Test
-    func subscript_interpolated() throws {
-        let t60      = try #require(Tempo(uintValue: 60))
-        let t120     = try #require(Tempo(uintValue: 120))
-        let t75      = try #require(Tempo(uintValue: 75))
+    func subscript_interpolated() {
+        let t60      = Tempo(60)
+        let t120     = Tempo(120)
+        let t75      = Tempo(75)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t60)
@@ -386,9 +386,50 @@ extension TempoMapTests {
     }
 
     @Test
+    func subscript_interpolated_exact() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(60))
+        tmap.insert(beatTime: BeatTime(1), tempo: Tempo(75))
+
+        // METER_TABLE.md 1.10: halfway, the speed is 15 + (75/4 − 15)·1/4 = 255/16 whole notes
+        // per minute — ♩ = 63¾, kept exact (the old subscript rounded it to 64).
+        let tempo = tmap[beat(1, 2)]
+
+        #expect(tempo.numberValue == frac(255, 16))
+        #expect(tempo.rate == frac(255, 4))
+        #expect(tempo.unit == .quarter)
+    }
+
+    @Test
+    func subscript_interpolated_inStartingUnit() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: dottedQuarter(90))
+        tmap.insert(beatTime: BeatTime(1), tempo: Tempo(300, unit: dur(1, 8)))
+
+        // Speeds 135/4 → 75/2; halfway: 135/4 + (15/4)·1/4 = 555/16, in ♩. → rate 185/2.
+        let tempo = tmap[beat(1, 2)]
+
+        #expect(tempo.numberValue == frac(555, 16))
+        #expect(tempo == Tempo(rate: frac(185, 2), unit: dur(3, 8)))
+    }
+
+    @Test
+    func subscript_noClamp() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(1))
+        tmap.insert(beatTime: BeatTime(1), tempo: Tempo(2))
+
+        // The old subscript clamped to a minimum of 1 BPM and rounded to whole BPM.
+        #expect(tmap[beat(1, 2)] == Tempo(rate: frac(5, 4)))
+    }
+
+    @Test
     func update_collapsesIntoDuplicate() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap = TempoMap()
         var ids: [TempoMap.EntryID] = []
 
@@ -417,8 +458,8 @@ extension TempoMapTests {
 
     @Test
     func update_found() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90  = try #require(Tempo(uintValue: 90))
+        let t120 = Tempo(120)
+        let t90  = Tempo(90)
         var tmap = TempoMap()
         var foundEntryID: TempoMap.EntryID?
 
@@ -436,8 +477,8 @@ extension TempoMapTests {
     }
 
     @Test
-    func update_notFound() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func update_notFound() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         let result = tmap.update(entryID: TempoMap.EntryID(), tempo: t120)

@@ -11,8 +11,8 @@ struct TimeConverterEntryTests {
 
 extension TimeConverterEntryTests {
     @Test
-    func init_validValues() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func init_validValues() {
+        let t120 = Tempo(120)
         let entry = TimeConverter.Entry(beatTime: BeatTime(1), tempo: t120)
 
         #expect(entry.beatTime == BeatTime(1))

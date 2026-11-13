@@ -25,7 +25,7 @@ extension TimeConverter {
         guard !entries.isEmpty
         else { return }
 
-        let referenceTempoValue = Tempo.default.numberValue
+        let secondsPerMinute: Number = 60
 
         for index in entries.indices {
             let startTempo = entries[index].tempo.numberValue
@@ -47,17 +47,17 @@ extension TimeConverter {
             if tempoChange < 0 {
                 let scale = sqrt(-tempoChange / startTempo)
 
-                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / sqrt(startTempo * -tempoChange) * atanh(scale)).doubleValue)
+                wallDuration = WallDuration(seconds: (beatLength * secondsPerMinute / sqrt(startTempo * -tempoChange) * atanh(scale)).doubleValue)
             } else if tempoChange > 0 {
                 let scale = sqrt(tempoChange / startTempo)
 
-                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / sqrt(startTempo * tempoChange) * atan(scale)).doubleValue)
+                wallDuration = WallDuration(seconds: (beatLength * secondsPerMinute / sqrt(startTempo * tempoChange) * atan(scale)).doubleValue)
             } else {
-                wallDuration = WallDuration(seconds: (beatLength * referenceTempoValue / startTempo).doubleValue)
+                wallDuration = WallDuration(seconds: (beatLength * secondsPerMinute / startTempo).doubleValue)
             }
 
             let wallTime: WallTime = if index == 0 {
-                WallTime(seconds: (entries[0].beatTime.numberValue * referenceTempoValue / startTempo).doubleValue)
+                WallTime(seconds: (entries[0].beatTime.numberValue * secondsPerMinute / startTempo).doubleValue)
             } else {
                 entries[index - 1].wallTime + entries[index - 1].wallDuration
             }

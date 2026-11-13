@@ -12,26 +12,26 @@ struct TimeConverterInternalTests {
 
 extension TimeConverterInternalTests {
     @Test
-    func floorIndex_forBeatTime() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func floorIndex_forBeatTime() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t120)
-        tmap.insert(beatTime: BeatTime(2), tempo: t120)
+        tmap.insert(beatTime: beat(1, 2), tempo: t120)
 
         let tconv = TimeConverter(tempoMap: tmap)
 
-        #expect(tconv.floorIndex(for: BeatTime(1)) == 0)
-        #expect(tconv.floorIndex(for: BeatTime(5)) == 1)
+        #expect(tconv.floorIndex(for: beat(1, 4)) == 0)
+        #expect(tconv.floorIndex(for: beat(5, 4)) == 1)
     }
 
     @Test
-    func floorIndex_forWallTime() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func floorIndex_forWallTime() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t120)
-        tmap.insert(beatTime: BeatTime(2), tempo: t120)
+        tmap.insert(beatTime: beat(1, 2), tempo: t120)
 
         let tconv = TimeConverter(tempoMap: tmap)
 
@@ -40,12 +40,12 @@ extension TimeConverterInternalTests {
     }
 
     @Test
-    func updateDerivedProperties_computesWallTimes() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func updateDerivedProperties_computesWallTimes() {
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t120)
-        tmap.insert(beatTime: BeatTime(2), tempo: t120)
+        tmap.insert(beatTime: beat(1, 2), tempo: t120)
 
         var tconv = TimeConverter(tempoMap: tmap)
 
@@ -57,19 +57,19 @@ extension TimeConverterInternalTests {
     }
 
     @Test
-    func updateDerivedProperties_decreasingTempo() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t60  = try #require(Tempo(uintValue: 60))
+    func updateDerivedProperties_decreasingTempo() {
+        let t120 = Tempo(120)
+        let t60  = Tempo(60)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t120)
-        tmap.insert(beatTime: BeatTime(4), tempo: t60)
+        tmap.insert(beatTime: BeatTime(1), tempo: t60)
 
         var tconv = TimeConverter(tempoMap: tmap)
 
         tconv.updateDerivedProperties()
 
-        #expect(tconv.entries[0].tempoChange == -60)
+        #expect(tconv.entries[0].tempoChange == -15)
         #expect(tconv.entries[0].wallDuration == WallDuration(2_492_901))
         #expect(tconv.entries[1].wallTime == WallTime(2_492_901))
     }
@@ -84,19 +84,19 @@ extension TimeConverterInternalTests {
     }
 
     @Test
-    func updateDerivedProperties_increasingTempo() throws {
-        let t60  = try #require(Tempo(uintValue: 60))
-        let t120 = try #require(Tempo(uintValue: 120))
+    func updateDerivedProperties_increasingTempo() {
+        let t60  = Tempo(60)
+        let t120 = Tempo(120)
         var tmap = TempoMap()
 
         tmap.insert(beatTime: BeatTime(0), tempo: t60)
-        tmap.insert(beatTime: BeatTime(4), tempo: t120)
+        tmap.insert(beatTime: BeatTime(1), tempo: t120)
 
         var tconv = TimeConverter(tempoMap: tmap)
 
         tconv.updateDerivedProperties()
 
-        #expect(tconv.entries[0].tempoChange == 60)
+        #expect(tconv.entries[0].tempoChange == 15)
         #expect(tconv.entries[0].wallDuration == WallDuration(3_141_593))
         #expect(tconv.entries[1].wallTime == WallTime(3_141_593))
     }

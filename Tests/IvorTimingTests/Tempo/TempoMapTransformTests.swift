@@ -3,6 +3,7 @@
 @testable import IvorTiming
 import Testing
 import XestiNumbers
+import XestiTools
 
 struct TempoMapTransformTests {
 }
@@ -13,7 +14,7 @@ extension TempoMapTransformTests {
     @Test
     func augment_entryIDsRestrictsAffectedEntries() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
 
         let entryID1 = map.insert(beatTime: 0, tempo: .default).entryID
 
@@ -53,8 +54,8 @@ extension TempoMapTransformTests {
     @Test
     func augment_nilAnchorWithEntryIDsUsesSelectedRange() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         map.insert(beatTime: 0, tempo: .default)
 
@@ -88,8 +89,8 @@ extension TempoMapTransformTests {
     @Test
     func augment_scalesBeatTimes() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         map.insert(beatTime: 1, tempo: t120)
         map.insert(beatTime: 3, tempo: t140)
@@ -134,8 +135,8 @@ extension TempoMapTransformTests {
     @Test
     func diminish_scalesBeatTimes() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         map.insert(beatTime: 2, tempo: t120)
         map.insert(beatTime: 6, tempo: t140)
@@ -154,7 +155,7 @@ extension TempoMapTransformTests {
     @Test
     func move_entryIDsRestrictsAffectedEntries() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
 
         let entryID1 = map.insert(beatTime: 0, tempo: .default).entryID
 
@@ -195,8 +196,8 @@ extension TempoMapTransformTests {
     @Test
     func quantize_entryIDsRestrictsAffectedEntries() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         let entryID1 = map.insert(beatTime: BeatTime(0.49), tempo: t120).entryID
         let entryID2 = map.insert(beatTime: BeatTime(4.49), tempo: t140).entryID
@@ -218,8 +219,8 @@ extension TempoMapTransformTests {
     @Test
     func quantize_snapsBeatTimesToGrid() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         map.insert(beatTime: BeatTime(0.49), tempo: t120)
         map.insert(beatTime: BeatTime(3.6), tempo: t140)
@@ -240,8 +241,8 @@ extension TempoMapTransformTests {
     @Test
     func reverse_entryIDsSelectionIsSelfContained() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t140 = try #require(Tempo(uintValue: 140))
+        let t120 = Tempo(120)
+        let t140 = Tempo(140)
 
         map.insert(beatTime: 0, tempo: .default)
 
@@ -282,7 +283,7 @@ extension TempoMapTransformTests {
     @Test
     func reverse_invalidAnchorThrows() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
 
         map.insert(beatTime: 0, tempo: .default)
         map.insert(beatTime: 2, tempo: t120)
@@ -295,7 +296,7 @@ extension TempoMapTransformTests {
     @Test
     func reverse_mirrorsBeatTimes() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
 
         map.insert(beatTime: 0, tempo: .default)
         map.insert(beatTime: 2, tempo: t120)
@@ -318,8 +319,8 @@ extension TempoMapTransformTests {
         // forwards: 60→120 over 0–4, reversed, must read at every beat exactly like 120→60
         // over 0–4. It is deliberately *not* the original curve run backwards in time.
         //
-        let t60 = try #require(Tempo(uintValue: 60))
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t60 = Tempo(60)
+        let t120 = Tempo(120)
 
         var reversed = TempoMap()
 
@@ -341,7 +342,7 @@ extension TempoMapTransformTests {
         // The ritardando eases in, as the accelerando did: 105 at beat 2, not the 75 that the
         // original curve run backwards would give.
         //
-        #expect(reversed[2] == Tempo(uintValue: 105))
+        #expect(reversed[2] == Tempo(105))
     }
 
     @Test
@@ -352,8 +353,8 @@ extension TempoMapTransformTests {
         // 4–8 must give 120 for 0–4, 60 for 4–8: the pair at 4 swaps order, and
         // both segments stay flat rather than turning into ramps.
         //
-        let t60 = try #require(Tempo(uintValue: 60))
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t60 = Tempo(60)
+        let t120 = Tempo(120)
 
         var map = TempoMap()
 
@@ -382,7 +383,7 @@ extension TempoMapTransformTests {
     @Test
     func reverse_validAnchorDoesNotThrow() throws {
         var map = TempoMap()
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
 
         map.insert(beatTime: 0, tempo: .default)
         map.insert(beatTime: 2, tempo: t120)
@@ -396,5 +397,155 @@ extension TempoMapTransformTests {
         }
 
         #expect(beatTimes.sorted() == [0, 2])
+    }
+
+    @Test
+    func scaleUnits_anchorAtZero() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(240, unit: dur(1, 8)))
+        tmap.insert(beatTime: BeatTime(1), tempo: Tempo(120, unit: dur(1, 8)))
+
+        tmap.scaleUnits(by: 2, from: .zero)
+
+        #expect(tmap.map(\.beatTime) == [BeatTime(0), BeatTime(1)])
+        #expect(tmap.map(\.tempo) == [Tempo(240), Tempo(120)])
+    }
+
+    @Test
+    func scaleUnits_anchorBeforeFirstEntry() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(2), tempo: Tempo(120))
+
+        let before = TimeConverter(tempoMap: tmap)
+
+        tmap.scaleUnits(by: 2, from: BeatTime(1))
+
+        // The unscaled entry at the anchor keeps ♩ = 120 governing everything before it.
+        #expect(tmap.map(\.beatTime) == [BeatTime(1), BeatTime(1), BeatTime(2)])
+        #expect(tmap.map(\.tempo) == [Tempo(120), Tempo(120, unit: dur(1, 2)), Tempo(120, unit: dur(1, 2))])
+
+        let after = TimeConverter(tempoMap: tmap)
+
+        #expect(after.wallTime(at: beat(1, 2)) == before.wallTime(at: beat(1, 2)))
+        #expect(after.wallTime(at: BeatTime(1)) == WallTime(2_000_000))
+        #expect(after.wallTime(at: BeatTime(2)) == WallTime(3_000_000))
+    }
+
+    @Test
+    func scaleUnits_anchorInsideRamp() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(60))
+        tmap.insert(beatTime: BeatTime(2), tempo: Tempo(120))
+
+        let rampBefore = tmap[beat(1, 2)]
+        let wallBefore = TimeConverter(tempoMap: tmap).wallTime(at: BeatTime(1))
+
+        tmap.scaleUnits(by: 2, from: BeatTime(1))
+
+        // Halfway through the ramp, the speed is ♩ = 75: kept, then stepped to 𝅗 = 75.
+        #expect(tmap.map(\.beatTime) == [BeatTime(0), BeatTime(1), BeatTime(1), BeatTime(2)])
+        #expect(tmap.map(\.tempo) == [Tempo(60), Tempo(75), Tempo(75, unit: dur(1, 2)), Tempo(120, unit: dur(1, 2))])
+
+        // The first half of the ramp keeps its exact shape.
+        #expect(tmap[beat(1, 2)] == rampBefore)
+
+        let wallAfter = TimeConverter(tempoMap: tmap).wallTime(at: BeatTime(1))
+
+        #expect(abs(wallAfter.doubleValue - wallBefore.doubleValue) < 0.000002)
+    }
+
+    @Test
+    func scaleUnits_diminish() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: dottedQuarter(90))
+
+        tmap.scaleUnits(by: frac(1, 3), from: .zero)
+
+        #expect(tmap.map(\.tempo) == [Tempo(90, unit: dur(1, 8))])
+    }
+
+    @Test
+    func scaleUnits_emptyMap() {
+        var tmap = TempoMap()
+
+        tmap.scaleUnits(by: 2, from: .zero)
+
+        #expect(tmap.map(\.beatTime) == [BeatTime(0)])
+        #expect(tmap.map(\.tempo) == [Tempo(60, unit: dur(1, 2))])
+    }
+
+    @Test
+    func scaleUnits_emptyMap_anchorAfterZero() {
+        var tmap = TempoMap(defaultTempo: Tempo(120))
+
+        tmap.scaleUnits(by: 2, from: BeatTime(1))
+
+        #expect(tmap.map(\.beatTime) == [BeatTime(1), BeatTime(1)])
+        #expect(tmap.map(\.tempo) == [Tempo(120), Tempo(120, unit: dur(1, 2))])
+
+        let tconv = TimeConverter(tempoMap: tmap)
+
+        #expect(tconv.wallTime(at: BeatTime(1)) == WallTime(2_000_000))
+        #expect(tconv.wallTime(at: BeatTime(3)) == WallTime(4_000_000))
+    }
+
+    @Test
+    func scaleUnits_entryAtAnchor() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(60))
+
+        let (entryID, _) = tmap.insert(beatTime: BeatTime(1), tempo: Tempo(60), extras: extras())
+
+        tmap.scaleUnits(by: 2, from: BeatTime(1))
+
+        // Without the unscaled copy, [0, 1) would ramp from 15 to 30 whole notes per minute.
+        #expect(tmap.map(\.beatTime) == [BeatTime(0), BeatTime(1), BeatTime(1)])
+        #expect(tmap.map(\.tempo) == [Tempo(60), Tempo(60), Tempo(60, unit: dur(1, 2))])
+        #expect(tmap[beat(1, 2)] == Tempo(60))
+
+        // The original entry keeps its identity and extras; the inserted copy has none.
+        let scaled = tmap[tmap.index(tmap.startIndex, offsetBy: 2)]
+
+        #expect(scaled.entryID == entryID)
+        #expect(scaled.extras == extras())
+        #expect(tmap[tmap.index(after: tmap.startIndex)].extras == nil)
+    }
+
+    @Test
+    func scaleUnits_factorOneIsNoOp() {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(1), tempo: Tempo(60))
+
+        let original = tmap
+
+        tmap.scaleUnits(by: 1, from: beat(1, 2))
+
+        #expect(tmap == original)
+    }
+
+    @Test
+    func scaleUnits_keepsSoundAfterAugment() throws {
+        var tmap = TempoMap()
+
+        tmap.insert(beatTime: BeatTime(0), tempo: Tempo(240, unit: dur(1, 8)))
+        tmap.insert(beatTime: beat(3, 8), tempo: Tempo(120, unit: dur(1, 8)))
+
+        let before = TimeConverter(tempoMap: tmap)
+
+        try tmap.augment(by: 2, anchor: .zero)
+        tmap.scaleUnits(by: 2, from: .zero)
+
+        let after = TimeConverter(tempoMap: tmap)
+
+        // METER_TABLE.md 1.6: 3/8 at ♪ = 240, × 2 → 3/4 at ♩ = 240.
+        #expect(tmap.first?.tempo == Tempo(240))
+        #expect(abs(after.wallTime(at: beat(3, 4)).doubleValue - before.wallTime(at: beat(3, 8)).doubleValue) < 0.000002)
+        #expect(abs(after.wallTime(at: beat(3, 2)).doubleValue - before.wallTime(at: beat(3, 4)).doubleValue) < 0.000002)
     }
 }

@@ -20,9 +20,10 @@ Musical time, duration, and tempo types.
 ## <a name="overview">Overview</a>
 
 The IvorTiming framework provides musical time, duration, and tempo types
-written in Swift. Both beat-based and wall-clock representations of time and
-duration are supported, along with tempo-based types for converting between the
-two and a quantizer for snapping beat times to rhythmic grid points.
+written in Swift. Both beat-based (measured in whole notes) and wall-clock
+representations of time and duration are supported, along with tempo-based
+types for converting between the two and a quantizer for snapping beat times to
+rhythmic grid points.
 
 ## <a name="requirements">Requirements</a>
 
@@ -75,19 +76,19 @@ import IvorTiming
 
 var tempoMap = TempoMap()
 
-tempoMap.insert(beatTime: 0, tempo: 120)
-tempoMap.insert(beatTime: 8, tempo: 60)     // slow down over 8 beats
+tempoMap.insert(beatTime: 0, tempo: Tempo(120))     // ♩ = 120
+tempoMap.insert(beatTime: 2, tempo: Tempo(60))      // slow to ♩ = 60 over two whole notes
 
-tempoMap[4]                                 // 105
+tempoMap[1].plain                           // "1/4=105" (♩ = 105)
 
 let converter = TimeConverter(tempoMap: tempoMap)
 
-converter.wallTime(at: 4).plain             // "2.090202" (seconds)
-converter.beatTime(at: WallTime(doubleValue: 2)!).plain    // "3.841"
+converter.wallTime(at: 1).plain             // "2.090202" (seconds)
+converter.beatTime(at: WallTime(doubleValue: 2)!).plain    // "0.96" (whole notes)
 
-let quantizer = try BeatQuantizer(factors: [4, 3])
+let quantizer = try BeatQuantizer(factors: [16, 12])
 
-quantizer.quantize(BeatTime(plain: "1.3")!).plain   // "1 1/3"
+quantizer.quantize(BeatTime(plain: "0.33")!).plain  // "0 1/3"
 ```
 
 For the complete story — times and durations, arithmetic, editing and

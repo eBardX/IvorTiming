@@ -35,7 +35,7 @@ extension BeatTime {
     /// - Parameter time:  The beat time to advance.
     /// - Parameter dur:   The beat duration to add.
     ///
-    /// - Returns:  The beat time `dur` beats after `time`.
+    /// - Returns:  The beat time `dur` after `time`.
     public static func + (time: Self,
                           dur: BeatDuration) -> Self {
         BeatTime(time.numberValue + dur.numberValue)
@@ -55,7 +55,7 @@ extension BeatTime {
     /// - Parameter time:  The beat time to retreat.
     /// - Parameter dur:   The beat duration to subtract.
     ///
-    /// - Returns:  The beat time `dur` beats before `time`.
+    /// - Returns:  The beat time `dur` before `time`.
     ///
     /// - Precondition: `dur` must not exceed `time`.
     public static func - (time: Self,

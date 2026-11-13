@@ -2,7 +2,7 @@
 
 /// The basis used to measure time in a musical context.
 public enum TimeBasis {
-    /// Musical beat time, measured in beats.
+    /// Musical beat time, measured in whole notes.
     case beat
 
     /// Wall-clock time, measured in seconds.
@@ -44,8 +44,8 @@ extension TimeBasis: Codable {
     ///
     /// - Parameter decoder:    The decoder to read from.
     ///
-    /// - Throws:   `DecodingError.dataCorruptedError` if the decoded string is
-    ///             not a recognized time basis value.
+    /// - Throws:   `DecodingError` if the decoded string is not a recognized time
+    ///             basis value.
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self)

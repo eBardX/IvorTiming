@@ -13,8 +13,8 @@ struct TempoMapStoredEntryTests {
 
 extension TempoMapStoredEntryTests {
     @Test
-    func beatTime() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func beatTime() {
+        let t120 = Tempo(120)
         let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let extended = TempoMap.StoredEntry(beatTime: BeatTime(2),
                                             tempo: t120,
@@ -26,7 +26,7 @@ extension TempoMapStoredEntryTests {
 
     @Test
     func codable() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+        let t120 = Tempo(120)
         let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let extended = TempoMap.StoredEntry(beatTime: BeatTime(2),
                                             tempo: t120,
@@ -41,8 +41,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func comparable() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func comparable() {
+        let t120 = Tempo(120)
         let earlier = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let later = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t120, extras: nil)
 
@@ -51,8 +51,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func entryID_defaultsToFreshIdentity() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func entryID_defaultsToFreshIdentity() {
+        let t120 = Tempo(120)
         let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
@@ -60,8 +60,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func entryID_explicit() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func entryID_explicit() {
+        let t120 = Tempo(120)
         let entryID = TempoMap.EntryID()
         let entry = TempoMap.StoredEntry(entryID: entryID, beatTime: BeatTime(1), tempo: t120, extras: nil)
 
@@ -69,8 +69,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func equality() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func equality() {
+        let t120 = Tempo(120)
         let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
@@ -78,8 +78,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func equality_ignoresIdentity() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func equality_ignoresIdentity() {
+        let t120 = Tempo(120)
         let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let e2 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
@@ -88,8 +88,8 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func extras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func extras() {
+        let t120 = Tempo(120)
         let extrasValue = Extras(elements: [Extra(name: "tag")])
         let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let extended = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
@@ -99,9 +99,9 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func inequality() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90 = try #require(Tempo(uintValue: 90))
+    func inequality() {
+        let t120 = Tempo(120)
+        let t90 = Tempo(90)
         let e1 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let e2 = TempoMap.StoredEntry(beatTime: BeatTime(2), tempo: t120, extras: nil)
         let e3 = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t90, extras: nil)
@@ -111,24 +111,24 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func init_emptyExtras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func init_emptyExtras() {
+        let t120 = Tempo(120)
         let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: Extras())
 
         #expect(entry.extras == nil)
     }
 
     @Test
-    func init_noExtras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func init_noExtras() {
+        let t120 = Tempo(120)
         let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
 
         #expect(entry.extras == nil)
     }
 
     @Test
-    func init_withExtras() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
+    func init_withExtras() {
+        let t120 = Tempo(120)
         let extrasValue = Extras(elements: [Extra(name: "tag")])
         let entry = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: extrasValue)
 
@@ -136,9 +136,9 @@ extension TempoMapStoredEntryTests {
     }
 
     @Test
-    func tempo() throws {
-        let t120 = try #require(Tempo(uintValue: 120))
-        let t90 = try #require(Tempo(uintValue: 90))
+    func tempo() {
+        let t120 = Tempo(120)
+        let t90 = Tempo(90)
         let simple = TempoMap.StoredEntry(beatTime: BeatTime(1), tempo: t120, extras: nil)
         let extended = TempoMap.StoredEntry(beatTime: BeatTime(1),
                                             tempo: t90,

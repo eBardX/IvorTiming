@@ -7,16 +7,17 @@ private import XestiNumbers
 /// Create a `BeatQuantizer` with an array of subdivision factors and use it
 /// to snap beat times to the closest rhythmic grid point.
 ///
-/// Each factor `n` defines a grid of `1/n`-beat subdivisions. The quantizer
-/// snaps to whichever grid point across all factors is nearest to the input
-/// time.
+/// Each factor `n` defines a grid of `1/n`-whole-note subdivisions: 16 for
+/// sixteenth notes, 12 for triplet eighth notes. The quantizer snaps to
+/// whichever grid point across all factors is nearest to the input time.
 public struct BeatQuantizer {
 
     // MARK: Public Initializers
 
     /// Creates a beat quantizer with the given subdivision factors.
     ///
-    /// - Parameter factors:    An array of positive integer subdivision factors.
+    /// - Parameter factors:    An array of positive integer subdivision factors. A factor `n`
+    ///                         subdivides the whole note into `n` parts.
     ///
     /// - Throws:   ``BeatQuantizer/Error/emptyFactors`` if `factors` is empty,
     ///             or ``BeatQuantizer/Error/invalidFactor(_:)`` if any factor is
@@ -37,7 +38,8 @@ extension BeatQuantizer {
     // MARK: Public Instance Properties
 
     /// The finest grid subdivision this quantizer snaps to, as a beat duration — the reciprocal
-    /// of the least common multiple of its subdivision factors.
+    /// of the least common multiple of its subdivision factors. For example, 1/48 for factors
+    /// of 16 and 12.
     public var gridUnit: BeatDuration {
         BeatDuration(1 / lcmFactor)
     }
